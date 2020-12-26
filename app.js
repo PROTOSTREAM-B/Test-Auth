@@ -3,23 +3,26 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const authRoute = require("./routes/auth");
+const projectRoute = require("./routes/projectRoute");
 
 const port = 8000;
 const app = express();
 
+app.use(express.json([]));
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use("/api", authRoute);
 
+//! Routes..
+app.use(authRoute);
+app.use(projectRoute);
+
+//! DataBase..
 mongoose.connect("mongodb://localhost:27017/userDB", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
 mongoose.set("useCreateIndex", true);
 
-app.listen(port, function () {
-  console.log("Server is running on port " + port);
-});
-
+//! Initial Routes...
 app.get("/", function (req, res) {
   res.json({
     SIGNUP: "localhost:4000/api/register",
@@ -30,4 +33,8 @@ app.get("/", function (req, res) {
       SIGNIN: "email,password",
     },
   });
+});
+
+app.listen(port, function () {
+  console.log("Server is running on port " + port);
 });
