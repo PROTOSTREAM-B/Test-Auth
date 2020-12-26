@@ -5,8 +5,26 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 
+var _ = require('lodash');
+
+//  localhost:8000/register---->email----->password
+//  localhost:8000/login----->email------>password
+
 exports.register = (req, res) => {
-  console.log(req.body);
+  let regx=/^([a-z]+)(\.)([0-9]{4})([a-z]{2})([0-9]{4})(@)(kiet)(\.)(edu)$/;
+    if(regx.test(req.body.email)){
+        let testemail=req.body.email;
+        let data=_.capitalize(testemail).split('\.');
+        let proname=data[0];
+        let proid=data[1].split('@')[0];
+        let probranch=proid.slice(4,6);
+        let proyear="20"+proid.slice(0,2)+"-"+proid.slice(2,4);
+        let profiledata= {
+            Profilename:proname,
+            ProfileID:proid,
+            ProfileBranch:probranch,
+            ProfileYear:proyear
+        };
   User.findOne({ email: req.body.email }, function (err, foundUser) {
     console.log(foundUser);
     if (foundUser) {
@@ -14,9 +32,9 @@ exports.register = (req, res) => {
     } else {
       bcrypt.hash(req.body.password, saltRounds, function (err, hash) {
         const newUser = new User({
-          name: req.body.name,
           email: req.body.email,
           password: hash,
+          profiledata:profiledata
         });
         //console.log(newUser);
         newUser.save(function (err) {
@@ -29,7 +47,13 @@ exports.register = (req, res) => {
             return res.status(400).json({
               message: "User got registered",
               Userdata: newUser,
-              Usertoken: token,
+              profiledb: {
+                Profilename:proname,
+                ProfileID:proid,
+                ProfileBranch:probranch,
+                ProfileYear:proyear
+              },
+              Usertoken: token
             });
           } else {
             return res.status(400).json({
@@ -40,6 +64,10 @@ exports.register = (req, res) => {
       });
     }
   });
+}
+else{
+  return res.status(400).json("Invalid Email id");
+}
 };
 
 exports.login = (req, res) => {

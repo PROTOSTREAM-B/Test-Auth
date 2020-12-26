@@ -3,12 +3,6 @@ const { ObjectId } = mongoose.Schema;
 
 const userSchema = new mongoose.Schema(
   {
-    name: {
-      type: String,
-      required: true,
-      minlength: 3,
-      maxlength: 50,
-    },
     email: {
       type: String,
       required: true,
@@ -22,7 +16,7 @@ const userSchema = new mongoose.Schema(
     projects: {
       type: ObjectId,
       ref: "Projects",
-    },
+    },profiledata:{},
   },
   { timestamps: true }
 );
