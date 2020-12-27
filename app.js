@@ -3,6 +3,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const authRoute = require("./routes/auth");
+const userRoute = require("./routes/user");
 const projectRoute = require("./routes/projectRoute");
 
 const port = 8000;
@@ -14,6 +15,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //! Routes..
 app.use(authRoute);
 app.use(projectRoute);
+app.use(userRoute);
 
 //! DataBase..
 mongoose.connect("mongodb://localhost:27017/userDB", {

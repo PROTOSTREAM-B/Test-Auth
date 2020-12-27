@@ -13,10 +13,13 @@ const userSchema = new mongoose.Schema(
       required: true,
       minlength: 3,
     },
-    projects: {
-      type: ObjectId,
-      ref: "Projects",
-    },profiledata:{},
+    projects: [
+      {
+        type: ObjectId,
+        ref: "Projects",
+      },
+    ],
+    profiledata: {},
   },
   { timestamps: true }
 );
