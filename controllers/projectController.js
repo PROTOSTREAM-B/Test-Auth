@@ -51,6 +51,7 @@ exports.pushProjectInUser = (req, res, next) => {
   // });
   // console.log(project.toArray());
 
+  //! User not updating idk what is the error....
   User.findOneAndUpdate(
     { _id: req.profile._id },
     { $push: { projects: project } },
@@ -70,6 +71,7 @@ exports.pushProjectInUser = (req, res, next) => {
   next();
 };
 
+//! error!!!
 exports.createProject = (req, res) => {
   console.log("In createProject ");
   // console.log("req.profile:: ", req.profile);
