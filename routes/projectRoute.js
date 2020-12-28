@@ -1,5 +1,4 @@
 const express = require("express");
-const { isAuthenticated } = require("../controllers/auth");
 const {
   findAllProjects,
   createProject,

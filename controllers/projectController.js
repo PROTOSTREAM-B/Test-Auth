@@ -33,10 +33,11 @@ exports.findProject = (req, res) => {
   });
 };
 
+//! Not complete..
 exports.pushProjectInUser = (req, res, next) => {
   console.log("in pushProjectInUser ");
   // console.log(req.profile);
-  let project;
+  let project = [];
   // req.profile.projects.forEach((project) => {
   project.push({
     ProjectTitle: req.body.ProjectTitle,
