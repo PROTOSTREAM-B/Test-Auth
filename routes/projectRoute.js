@@ -2,7 +2,6 @@ const express = require("express");
 const {
   findAllProjects,
   createProject,
-  pushProjectInUser,
 } = require("../controllers/projectController");
 const { getUserById } = require("../controllers/user");
 
@@ -12,6 +11,6 @@ router.get("/projects", findAllProjects);
 //params..
 router.param("UserId", getUserById);
 
-router.post("/project/:UserId", pushProjectInUser, createProject);
+router.post("/project/:UserId", createProject);
 // router.get("/projects/:UserId", getProjectByUserId);
 module.exports = router;
