@@ -3,7 +3,7 @@ const User = require("../models/user");
 
 exports.findAllProjects = (req, res) => {
   Projects.find()
-    .populate("user")
+    .populate("user", "name")
     .exec((err, allProjects) => {
       if (err) {
         return res.status(500).json({
@@ -13,7 +13,6 @@ exports.findAllProjects = (req, res) => {
 
       res.status(200).json(allProjects);
     });
-  // Projects.find({}, );
 };
 
 //TODO maybe not complete have a look at it...
