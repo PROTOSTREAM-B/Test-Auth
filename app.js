@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const authRoute = require("./routes/auth");
 const userRoute = require("./routes/user");
 const projectRoute = require("./routes/projectRoute");
+const hackRoute = require("./routes/hackathon");
 
 const port = 8000;
 const app = express();
@@ -15,6 +16,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //! Routes..
 app.use(authRoute);
 app.use(projectRoute);
+app.use(hackRoute);
 app.use(userRoute);
 
 //! DataBase..
