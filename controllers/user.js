@@ -1,7 +1,7 @@
 const User = require("../models/user");
 
-
 exports.getUserById = (req, res, next, id) => {
+  console.log("in getUserById");
   User.findById(id).exec((err, user) => {
     if (err || !user) {
       return res.status(400).json({
@@ -16,14 +16,4 @@ exports.getUserById = (req, res, next, id) => {
 exports.getUser = (req, res) => {
   req.profile.password = undefined;
   return res.json(req.profile);
-  //   User.find(id)
-  //     .populate("projects")
-  //     .exec((err, user) => {
-  //       if (err) {
-  //         return res.json({
-  //           error: err,
-  //         });
-  //       }
-  //       res.json(user);
-  //     });
 };

@@ -20,6 +20,12 @@ const userSchema = new mongoose.Schema(
       },
     ],
     profiledata: {},
+    hackathons: [
+      {
+        type: ObjectId,
+        ref: "Hackathon",
+      },
+    ],
   },
   { timestamps: true }
 );

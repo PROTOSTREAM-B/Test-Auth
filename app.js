@@ -29,9 +29,9 @@ mongoose.set("useCreateIndex", true);
 //! Initial Routes...
 app.get("/", function (req, res) {
   res.json({
-    SIGNUP: "localhost:4000/api/register",
-    SIGNIN: "localhost:4000/api/login",
-    SIGNOUT: "localhost:4000/api/logout",
+    SIGNUP: "localhost:8000/register",
+    SIGNIN: "localhost:8000/login",
+    SIGNOUT: "localhost:8000/logout",
     BODY: {
       SIGNUP: "username,email,password",
       SIGNIN: "email,password",
@@ -42,3 +42,5 @@ app.get("/", function (req, res) {
 app.listen(port, function () {
   console.log("Server is running on port " + port);
 });
+
+
