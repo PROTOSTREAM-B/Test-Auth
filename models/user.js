@@ -20,6 +20,10 @@ const userSchema = new mongoose.Schema(
       },
     ],
     profiledata: {},
+    role: {
+      type: Number,
+      default: 0,
+    },
     hackathons: [
       {
         type: ObjectId,

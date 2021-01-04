@@ -50,16 +50,26 @@ exports.createNewHackathon = (req, res) => {
   const hackthon = new Hackathon(req.body);
 
   hackthon.save((err, hackathon) => {
-    if (err || !hackathon) {
+    if (err) {
       res.status(500).json({
         error: err,
       });
     }
-    if (req.profile.hackathons.length == 0) {
-      console.log("hahahah");
-    }
     hackathons.push(hackathon);
-    console.log(hackathons);
+
+    User.findOneAndUpdate(
+      { _id: req.profile._id },
+      { $push: { hackathons: hackathons } },
+      { new: true },
+      (err, updatedUser) => {
+        if (err) {
+          return res.status(400).json({
+            error: "Unable to save hackathon",
+          });
+        }
+      }
+    );
+
     res.status(200).json(hackathon);
   });
 };
