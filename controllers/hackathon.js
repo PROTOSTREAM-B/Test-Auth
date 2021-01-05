@@ -55,6 +55,7 @@ exports.createNewHackathon = (req, res) => {
         error: err,
       });
     }
+    console.log("after saving hackathon to database");
     hackathons.push(hackathon);
 
     User.findOneAndUpdate(

@@ -11,12 +11,6 @@ var _ = require("lodash");
 //  localhost:8000/register---->email----->password
 //  localhost:8000/login----->email------>password
 
-exports.isSignedIn = expressJwt({
-  secret: process.env.SECRET_KEY,
-  algorithms: [],
-  userProperty: "auth",
-});
-
 exports.register = (req, res) => {
   let regx = /^([a-z]+)(\.)([0-9]{4})([a-z]{2})([0-9]{4})(@)(kiet)(\.)(edu)$/;
   if (regx.test(req.body.email)) {
@@ -84,8 +78,8 @@ exports.login = (req, res) => {
   const password = req.body.password;
   User.findOne({ email: username }, function (err, foundUser) {
     if (err || !foundUser) {
-      return res.json({
-        error: err || "Error in login",
+      return res.status(404).json({
+        error: err || "User not found",
       });
     } else {
       if (foundUser) {
@@ -117,4 +111,25 @@ exports.logout = (req, res) => {
   return res.status(200).json({
     message: "User signout Successfully",
   });
+};
+
+// protected Routes..
+exports.isSignedIn = expressJwt({
+  secret: process.env.SECRET_KEY,
+  userProperty: "auth",
+});
+
+exports.isAuthenticated = (req, res, next) => {
+  console.log("REQ.PROFILE", req.profile);
+  console.log("REQ.AUTH", req.auth);
+  // console.log("REQ.PROFILE._ID", req.profile._id);
+  console.log("REQ.AUTH_ID", req.auth._id);
+  let checker = req.profile && req.auth && req.profile._id == req.auth._id;
+  if (!checker) {
+    return res.status(403).json({
+      error: "ACCESS DENIED",
+      hii: "here is the error",
+    });
+  }
+  next();
 };

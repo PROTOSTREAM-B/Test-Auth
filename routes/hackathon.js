@@ -1,5 +1,4 @@
 const express = require("express");
-console.log("in hackathon routes");
 const {
   findAllHackathons,
   createNewHackathon,
@@ -7,7 +6,7 @@ const {
 
 const { getUserById } = require("../controllers/user");
 const { getHackYear } = require("../controllers/hackathon");
-const hackathon = require("../models/hackathon");
+const { isSignedIn, isAuthenticated } = require("../controllers/auth");
 
 const router = express.Router();
 
@@ -18,6 +17,11 @@ router.param("UserId", getUserById);
 // create new hackathon project having by user have userID
 
 router.get("/hackathon/allHackathons/:HackYear", findAllHackathons);
-router.post("/hackathon/createProject/:UserId", createNewHackathon);
+router.post(
+  "/hackathon/createProject/:UserId",
+  isSignedIn,
+  isAuthenticated,
+  createNewHackathon
+);
 
 module.exports = router;

@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const { ObjectId } = mongoose.Schema;
 
 const hackathonSchema = new mongoose.Schema(
   {
@@ -8,43 +7,33 @@ const hackathonSchema = new mongoose.Schema(
       required: true,
     },
     Hackname: {
-      type: String,
       required: true,
+      type: String,
     },
     Teamname: {
-      type: String,
       required: true,
+      type: String,
     },
     Leadername: {
-      type: String,
       required: true,
-    },
-    Leaderroll: {
       type: String,
-      required: true,
     },
     Leaderbranch: {
-      type: String,
       required: true,
-    },
-    Projectdomain: {
       type: String,
-      required: true,
     },
     Projectsummary: {
-      type: String,
       required: true,
+      type: String,
     },
     Leaderemailid: {
-      type: String,
       required: true,
+      type: String,
     },
     Leadermoblie: {
-      type: Number,
       required: true,
+      type: Number,
     },
-    //array store in single object
-    Hackmembers: {},
   },
   { timestamps: true }
 );
