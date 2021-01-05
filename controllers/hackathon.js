@@ -47,9 +47,10 @@ exports.findAllHackathons = (req, res, next, id) => {
 
 exports.createNewHackathon = (req, res) => {
   let hackathons = [];
-  const hackthon = new Hackathon(req.body);
+  const hackathon = new Hackathon(req.body);
+  console.log(hackathon);
 
-  hackthon.save((err, hackathon) => {
+  hackathon.save((err, hackathon) => {
     if (err) {
       res.status(500).json({
         error: err,

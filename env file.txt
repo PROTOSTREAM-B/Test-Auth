@@ -1,0 +1,5 @@
+SECRET_KEY=Thisisoursecret.
+CLIENT_ID=719168696723-4oknsndkaab5d6e9iuk80d6m6eeu6l66.apps.googleusercontent.com
+CLIENT_SECRET=HLyUa7iG5G8AyUyZeDu7t3VO
+MONGO_USERDB=userDB
+MONGO_PASS=IDRTbjyysuJIKVyu

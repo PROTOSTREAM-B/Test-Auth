@@ -120,10 +120,6 @@ exports.isSignedIn = expressJwt({
 });
 
 exports.isAuthenticated = (req, res, next) => {
-  console.log("REQ.PROFILE", req.profile);
-  console.log("REQ.AUTH", req.auth);
-  // console.log("REQ.PROFILE._ID", req.profile._id);
-  console.log("REQ.AUTH_ID", req.auth._id);
   let checker = req.profile && req.auth && req.profile._id == req.auth._id;
   if (!checker) {
     return res.status(403).json({
