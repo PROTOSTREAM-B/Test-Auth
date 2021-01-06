@@ -30,11 +30,12 @@ const hackathonSchema = new mongoose.Schema(
       required: true,
       type: String,
     },
-    Leadermoblie: {
+    Leadermobile: {
       required: true,
       type: Number,
     },
   },
+
   { timestamps: true }
 );
 

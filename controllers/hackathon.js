@@ -6,57 +6,40 @@ exports.getHackYear = (req, res, next, id) => {
   next();
 };
 
-exports.findAllHackathons = (req, res, next, id) => {
-  let year = req.body.year;
+exports.getHackathonById = (req, res, next, id) => {
+  console.log("in getUserById");
+  Hackathon.findById(id).exec((err, hackathon) => {
+    if (err || !hackathon) {
+      return res.status(400).json({
+        error: "No Hackathon was found in DB",
+      });
+    }
+    req.profile = hackathon;
+    next();
+  });
+};
 
-  // static years
-  switch (year) {
-    case "2018":
-      Hackathons.find(year, (err, hackathonproject) => {
-        if (err) {
-          return res.json(404).json({
-            error: err,
-          });
-        }
-        res.status(200).json(hackathonproject);
+exports.findAllHackathons = (req, res) => {
+  Hackathon.find().exec((err, hackathons) => {
+    if (err) {
+      return res.json({
+        error: err,
       });
-      break;
-    case "2019":
-      Hackathons.find(year, (err, hackathonproject) => {
-        if (err) {
-          return res.json(404).json({
-            error: err,
-          });
-        }
-        res.status(200).json(hackathonproject);
-      });
-      break;
-    case "2020":
-      Hackathons.find(year, (err, hackathonproject) => {
-        if (err) {
-          return res.json(404).json({
-            error: err,
-          });
-        }
-        res.status(200).json(hackathonproject);
-      });
-      break;
-  }
-  next();
+    }
+    res.status(200).json(hackathons);
+  });
 };
 
 exports.createNewHackathon = (req, res) => {
   let hackathons = [];
   const hackathon = new Hackathon(req.body);
   console.log(hackathon);
-
   hackathon.save((err, hackathon) => {
     if (err) {
       res.status(500).json({
         error: err,
       });
     }
-    console.log("after saving hackathon to database");
     hackathons.push(hackathon);
 
     User.findOneAndUpdate(
@@ -74,4 +57,9 @@ exports.createNewHackathon = (req, res) => {
 
     res.status(200).json(hackathon);
   });
+};
+
+exports.DeleteHackathon = (req, res) => {
+  console.log(req.profile);
+  return;
 };

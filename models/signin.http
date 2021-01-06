@@ -1,0 +1,10 @@
+ POST http://localhost:8000/register
+
+content-type: application/json
+
+{
+    "name":"test",
+    "email":"test1.1923cs1029@kiet.edu",
+    "password":"12345"
+}
+
