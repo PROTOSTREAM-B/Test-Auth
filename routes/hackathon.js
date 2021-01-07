@@ -11,7 +11,7 @@ const {
   getHackathonById,
   DeleteHackathon,
 } = require("../controllers/hackathon");
-const { isSignedIn, isAuthenticated } = require("../controllers/auth");
+const { isSignedIn, isAuthenticated, isAdmin } = require("../controllers/auth");
 
 const router = express.Router();
 
@@ -39,6 +39,7 @@ router.delete(
   "/hackathon/:hackathonId/:UserId",
   isSignedIn,
   isAuthenticated,
+  isAdmin,
   DeleteHackathon
 );
 
