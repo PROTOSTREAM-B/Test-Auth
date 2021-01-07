@@ -1,11 +1,20 @@
 const Hackathon = require("../models/hackathon");
 const User = require("../models/user");
 
-exports.getHackYear = (req, res, next, id) => {
-  // get selected year
-  next();
-};
+exports.getHackathonOfUser = (req, res) => {
+  console.log("inside getHackathonOfUser");
+  User.findById({ _id: req.profile._id })
+    .populate("hackathons")
+    .exec((err, user) => {
+      if (err) {
+        return res.status(400).json({
+          error: err,
+        });
+      }
 
+      return res.status(200).json(user.hackathons);
+    });
+};
 exports.getHackathonById = (req, res, next, id) => {
   console.log("in getUserById");
   Hackathon.findById(id).exec((err, hackathon) => {
@@ -14,7 +23,7 @@ exports.getHackathonById = (req, res, next, id) => {
         error: "No Hackathon was found in DB",
       });
     }
-    req.profile = hackathon;
+    req.hackathon = hackathon;
     next();
   });
 };
@@ -40,6 +49,7 @@ exports.createNewHackathon = (req, res) => {
         error: err,
       });
     }
+
     hackathons.push(hackathon);
 
     User.findOneAndUpdate(
@@ -60,6 +70,17 @@ exports.createNewHackathon = (req, res) => {
 };
 
 exports.DeleteHackathon = (req, res) => {
-  console.log(req.profile);
-  return;
+  let hackathon = req.hackathon;
+  console.log(req.hackathon);
+  hackathon.remove((err, deletedHackathon) => {
+    if (err || !deletedHackathon) {
+      res.status(400).json({
+        error: err,
+      });
+    }
+    res.json({
+      message: "hackathon deleted",
+      deletedHackathon,
+    });
+  });
 };
