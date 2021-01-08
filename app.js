@@ -6,12 +6,13 @@ const authRoute = require("./routes/auth");
 const userRoute = require("./routes/user");
 const projectRoute = require("./routes/projectRoute");
 const hackRoute = require("./routes/hackathon");
+const cors = require("cors");
 
-const port = 8000;
 const app = express();
 
 app.use(express.json([]));
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors());
 
 //! Routes..
 app.use(authRoute);
@@ -20,27 +21,12 @@ app.use(hackRoute);
 app.use(userRoute);
 
 //! DataBase..
-mongoose.connect("mongodb://localhost:27017/userDB", {
+mongoose.connect(process.env.MONGODB_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
 mongoose.set("useCreateIndex", true);
 
-//! Initial Routes...
-app.get("/", function (req, res) {
-  res.json({
-    SIGNUP: "localhost:8000/register",
-    SIGNIN: "localhost:8000/login",
-    SIGNOUT: "localhost:8000/logout",
-    BODY: {
-      SIGNUP: "username,email,password",
-      SIGNIN: "email,password",
-    },
-  });
+app.listen(process.env.PORT, function () {
+  console.log("Server is running on port " + process.env.PORT);
 });
-
-app.listen(port, function () {
-  console.log("Server is running on port " + port);
-});
-
-

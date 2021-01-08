@@ -74,11 +74,12 @@ exports.register = (req, res) => {
 };
 
 exports.login = (req, res) => {
+  console.log("in login route");
   const username = req.body.email;
   const password = req.body.password;
   User.findOne({ email: username }, function (err, foundUser) {
     if (err || !foundUser) {
-      return res.status(404).json({
+      return res.status(400).json({
         error: err || "User not found",
       });
     } else {
@@ -90,10 +91,17 @@ exports.login = (req, res) => {
               process.env.SECRET_KEY
             );
             res.cookie("token", token, { expire: new Date() + 7 });
-            const { _id, projects, hackathons, email, profiledata } = foundUser;
+            const {
+              _id,
+              projects,
+              hackathons,
+              email,
+              profiledata,
+              role,
+            } = foundUser;
             return res.status(200).json({
               token,
-              user: { _id, projects, hackathons, email, profiledata },
+              user: { _id, projects, hackathons, email, profiledata, role },
             });
           } else {
             return res.status(401).json({
