@@ -2,6 +2,7 @@ const User = require("../models/user");
 
 exports.getUserById = (req, res, next, id) => {
   console.log("in getUserById");
+  console.log(req);
   User.findById(id).exec((err, user) => {
     if (err || !user) {
       return res.status(400).json({
@@ -11,6 +12,7 @@ exports.getUserById = (req, res, next, id) => {
     req.profile = user;
     next();
   });
+
 };
 
 exports.getUser = (req, res) => {
