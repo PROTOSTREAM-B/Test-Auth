@@ -8,10 +8,8 @@ const saltRounds = 10;
 
 var _ = require("lodash");
 
-//  localhost:8000/register---->email----->password
-//  localhost:8000/login----->email------>password
-
 exports.register = (req, res) => {
+  console.log("inside register");
   let regx = /^([a-z]+)(\.)([0-9]{4})([a-z]{2})([0-9]{4})(@)(kiet)(\.)(edu)$/;
   if (regx.test(req.body.email)) {
     let testemail = req.body.email;
