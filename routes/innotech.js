@@ -26,13 +26,11 @@ router.get("/innotech/allInnotechs", isSignedIn, findAllInnotechs);
 router.get(
   "/innotech/:UserId",
   isSignedIn,
-  isAuthenticated,
   getInnotechOfUser
 );
 router.post(
   "/innotech/createInnotech/:UserId",
   isSignedIn,
-  isAuthenticated,
   createNewInnotech
 );
 router.delete(

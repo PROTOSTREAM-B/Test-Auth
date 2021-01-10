@@ -3,7 +3,7 @@ const Hackathon = require("../models/innotech");
 const User = require("../models/user");
 
 exports.getInnotechOfUser = (req, res) => {
-  console.log("inside getHackathonOfUser");
+  console.log("inside getInnotechOfUser");
   User.findById({ _id: req.profile._id })
     .populate("innotechs")
     .exec((err, user) => {
