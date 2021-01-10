@@ -26,7 +26,6 @@ router.get("/hackathon/allHackathons", isSignedIn, findAllHackathons);
 router.get(
   "/hackathon/:UserId",
   isSignedIn,
-  isAuthenticated,
   getHackathonOfUser
 );
 router.post(
