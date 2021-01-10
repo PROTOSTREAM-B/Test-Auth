@@ -139,13 +139,23 @@ exports.isAuthenticated = (req, res, next) => {
 
 exports.isAdmin = (req, res, next) => {
   console.log(req.profile);
-  if (req.profile.role === 2) {
+  if (req.profile.role === 3) {
     next();
   }
   return res.status(403).json({
     error: "You are not admin, Access Denied",
   });
 };
+
+exports.isTBI = (req, res, next) => {
+  if(req.profile.role === 2){
+    next();
+  }
+  return res.json({
+    error : "You are not TBI Member, Access Denied",
+  });
+};
+
 
 exports.isSens = (req, res, next) => {
   if (req.profile.role === 1) {
@@ -155,3 +165,4 @@ exports.isSens = (req, res, next) => {
     error: "Access Denied",
   });
 };
+

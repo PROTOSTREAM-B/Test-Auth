@@ -6,6 +6,8 @@ const authRoute = require("./routes/auth");
 const userRoute = require("./routes/user");
 const projectRoute = require("./routes/projectRoute");
 const hackRoute = require("./routes/hackathon");
+const schemeRoute = require("./routes/hackathon");
+const innotechRoute = require("./routes/innotech");
 const cors = require("cors");
 
 const app = express();
@@ -18,6 +20,8 @@ app.use(cors());
 app.use(authRoute);
 app.use(projectRoute);
 app.use(hackRoute);
+app.use(innotechRoute);
+app.use(schemeRoute);
 app.use(userRoute);
 
 //! DataBase..
