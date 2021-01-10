@@ -32,7 +32,6 @@ router.get(
 router.post(
   "/hackathon/createHackathon/:UserId",
   isSignedIn,
-  isAuthenticated,
   createNewHackathon
 );
 router.delete(
