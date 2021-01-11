@@ -17,6 +17,9 @@ const router = express.Router();
 router.param("schemeId", getSchemeById);
 router.param("UserId", getUserById);
 
+
+// this route showing error-----
+
 //router.get("/schemes/allSchemes", isSignedIn, findAllSchemes);
 
 router.post("/schemes/createScheme/:UserId",

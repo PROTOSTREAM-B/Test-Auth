@@ -2,6 +2,10 @@ const Scheme = require("../models/scheme");
 const User = require("../models/user");
 
 
+// ERROR: DISSCUSS ON WHATSAPP
+
+
+
 exports.getSchemeById = (req, res, next, id) => {
   console.log("in getSchemeById");
   Scheme.findById(id).exec((err, scheme) => {

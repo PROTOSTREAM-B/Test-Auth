@@ -1,5 +1,12 @@
 const Hackathon = require("../models/hackathon");
 const User = require("../models/user");
+const opt = require("../otp");
+
+const client = require("twilio")(opt.accountSid, opt.authToken);
+
+// console.log(opt.accountSid);
+// console.log(opt.serviceId);
+// console.log(opt.authToken);
 
 exports.getHackathonOfUser = (req, res) => {
   console.log("inside getHackathonOfUser");
@@ -39,10 +46,33 @@ exports.findAllHackathons = (req, res) => {
   });
 };
 
+//this middleware not sending data, which is require
+//channel = "sms"
+
+exports.otpverification = (req, res, next) => {
+  let vermobile="+"+req.body.leaderMobile;
+  console.log(vermobile);
+  client
+  .verify
+  .services(opt.serviceId)
+  .verifications
+  .create({
+    to: vermobile,
+    channel: req.body.channel
+  })
+  .then((data)=>{
+    console.log(data);
+    res.status(200).send(data);
+  })
+  next();
+};
+
 exports.createNewHackathon = (req, res) => {
   let hackathons = [];
   const hackathon = new Hackathon(req.body);
+  
   console.log(hackathon);
+  
   hackathon.save((err, hackathon) => {
     if (err) {
       res.status(500).json({

@@ -3,6 +3,7 @@ const {
   findAllHackathons,
   getHackathonOfUser,
   createNewHackathon,
+  otpverification
 } = require("../controllers/hackathon");
 
 const { getUserById } = require("../controllers/user");
@@ -31,7 +32,8 @@ router.get(
 router.post(
   "/hackathon/createHackathon/:UserId",
   isSignedIn,
-  createNewHackathon
+  otpverification,
+  createNewHackathon,
 );
 router.delete(
   "/hackathon/:hackathonId/:UserId",
