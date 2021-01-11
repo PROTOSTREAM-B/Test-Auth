@@ -6,8 +6,8 @@ const authRoute = require("./routes/auth");
 const userRoute = require("./routes/user");
 const projectRoute = require("./routes/projectRoute");
 const hackRoute = require("./routes/hackathon");
-const schemeRoute = require("./routes/hackathon");
 const innotechRoute = require("./routes/innotech");
+const schemeRoute = require("./routes/scheme");
 const cors = require("cors");
 
 const app = express();

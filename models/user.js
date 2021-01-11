@@ -36,6 +36,12 @@ const userSchema = new mongoose.Schema(
         ref: "Innotech",
       },
     ],
+    schemes: [
+      {
+        type: ObjectId,
+        ref: "Scheme",
+      }
+    ],
   },
   { timestamps: true }
 );

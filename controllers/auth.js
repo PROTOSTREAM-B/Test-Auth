@@ -93,13 +93,14 @@ exports.login = (req, res) => {
               _id,
               projects,
               hackathons,
+              schemes,
               email,
               profiledata,
               role,
             } = foundUser;
             return res.status(200).json({
               token,
-              user: { _id, projects, hackathons, email, profiledata, role },
+              user: { _id, projects, hackathons, email, schemes, profiledata, role },
             });
           } else {
             return res.status(401).json({
@@ -151,7 +152,7 @@ exports.isTBI = (req, res, next) => {
   if(req.profile.role === 2){
     next();
   }
-  return res.json({
+  return res.status(403).json({
     error : "You are not TBI Member, Access Denied",
   });
 };
