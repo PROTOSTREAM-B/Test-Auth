@@ -7,12 +7,12 @@ exports.getSchemeById = (req, res, next, id) => {
   Scheme.findById(id).exec((err, scheme) => {
     if (err || !scheme) {
       return res.status(400).json({
-        error: "No Hackathon was found in DB",
+        error: "No Scheme was found in DB",
       });
     }
     req.scheme = scheme;
+    next();
   });
-  next();
 };
 
 exports.findallSchemes = (req, res) => {
@@ -37,8 +37,8 @@ exports.createNewScheme = (req, res) => {
         error: err,
       });
     }
-    res.status(200).json(scheme);
     schemes.push(scheme);
+    res.status(200).json(scheme);
   });
 };
 
