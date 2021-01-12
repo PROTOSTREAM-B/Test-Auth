@@ -2,7 +2,7 @@ const Hackathon = require("../models/hackathon");
 const User = require("../models/user");
 const opt = require("../otp");
 
-const client = require("twilio")(opt.accountSid, opt.authToken);
+// const client = require("twilio")(opt.accountSid, opt.authToken);
 
 // console.log(opt.accountSid);
 // console.log(opt.serviceId);
@@ -50,29 +50,27 @@ exports.findAllHackathons = (req, res) => {
 //channel = "sms"
 
 exports.otpverification = (req, res, next) => {
-  let vermobile="+"+req.body.leaderMobile;
+  let vermobile = "+" + req.body.leaderMobile;
   console.log(vermobile);
-  client
-  .verify
-  .services(opt.serviceId)
-  .verifications
-  .create({
-    to: vermobile,
-    channel: req.body.channel
-  })
-  .then((data)=>{
-    console.log(data);
-    res.status(200).send(data);
-  })
+  client.verify
+    .services(opt.serviceId)
+    .verifications.create({
+      to: vermobile,
+      channel: req.body.channel,
+    })
+    .then((data) => {
+      console.log(data);
+      res.status(200).send(data);
+    });
   next();
 };
 
 exports.createNewHackathon = (req, res) => {
   let hackathons = [];
   const hackathon = new Hackathon(req.body);
-  
+
   console.log(hackathon);
-  
+
   hackathon.save((err, hackathon) => {
     if (err) {
       res.status(500).json({

@@ -1,10 +1,7 @@
 const Scheme = require("../models/scheme");
 const User = require("../models/user");
 
-
 // ERROR: DISSCUSS ON WHATSAPP
-
-
 
 exports.getSchemeById = (req, res, next, id) => {
   console.log("in getSchemeById");
@@ -21,7 +18,7 @@ exports.getSchemeById = (req, res, next, id) => {
 
 exports.findallSchemes = (req, res) => {
   console.log("inside scheme route");
-  Scheme.find().exec((err, schemes) => {
+  Scheme.find({}, (err, schemes) => {
     if (err) {
       return res.json({
         error: err,
@@ -32,20 +29,16 @@ exports.findallSchemes = (req, res) => {
 };
 
 exports.createNewScheme = (req, res) => {
-  let schemes = [];
   const scheme = new Scheme(req.body);
-  console.log(scheme);
   scheme.save((err, scheme) => {
     if (err) {
       res.status(500).json({
         error: err,
       });
     }
-    schemes.push(scheme);
     res.status(200).json(scheme);
   });
 };
-
 
 exports.DeleteScheme = (req, res) => {
   let scheme = req.scheme;

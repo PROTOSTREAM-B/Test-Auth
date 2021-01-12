@@ -100,7 +100,15 @@ exports.login = (req, res) => {
             } = foundUser;
             return res.status(200).json({
               token,
-              user: { _id, projects, hackathons, email, schemes, profiledata, role },
+              user: {
+                _id,
+                projects,
+                hackathons,
+                email,
+                schemes,
+                profiledata,
+                role,
+              },
             });
           } else {
             return res.status(401).json({
@@ -142,28 +150,29 @@ exports.isAdmin = (req, res, next) => {
   console.log(req.profile);
   if (req.profile.role === 3) {
     next();
+  } else {
+    return res.status(403).json({
+      error: "You are not admin, Access Denied",
+    });
   }
-  return res.status(403).json({
-    error: "You are not admin, Access Denied",
-  });
 };
 
 exports.isTBI = (req, res, next) => {
-  if(req.profile.role === 2){
+  if (req.profile.role === 2) {
     next();
+  } else {
+    return res.status(403).json({
+      error: "You are not TBI Member, Access Denied",
+    });
   }
-  return res.status(403).json({
-    error : "You are not TBI Member, Access Denied",
-  });
 };
-
 
 exports.isSens = (req, res, next) => {
   if (req.profile.role === 1) {
     next();
+  } else {
+    return res.json({
+      error: "Access Denied",
+    });
   }
-  return res.json({
-    error: "Access Denied",
-  });
 };
-

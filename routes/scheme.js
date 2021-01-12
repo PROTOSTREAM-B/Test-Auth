@@ -1,12 +1,12 @@
 const express = require("express");
 
 const {
-    findAllSchemes,
-    createNewScheme,
-    DeleteScheme
-  } = require("../controllers/scheme");
-  
-const { getUserById } = require("../controllers/user");  
+  findallSchemes,
+  createNewScheme,
+  DeleteScheme,
+} = require("../controllers/scheme");
+
+const { getUserById } = require("../controllers/user");
 
 const { getSchemeById } = require("../controllers/scheme");
 
@@ -17,23 +17,17 @@ const router = express.Router();
 router.param("schemeId", getSchemeById);
 router.param("UserId", getUserById);
 
-
 // this route showing error-----
 
+router.get("/schemes/allSchemes", isSignedIn, findallSchemes);
 
-//router.get("/schemes/allSchemes", isSignedIn, findAllSchemes);
+router.post(
+  "/schemes/createScheme/:UserId",
+  isSignedIn,
+  isTBI,
+  createNewScheme
+);
 
-router.post("/schemes/createScheme/:UserId",
-    isSignedIn,
-    isTBI,
-    createNewScheme,
-  );
-
-  router.delete(
-    "/schemes/:schemeId/:UserId",
-    isSignedIn,
-    isAdmin,
-    DeleteScheme
-  );
+router.delete("/schemes/:schemeId/:UserId", isSignedIn, isAdmin, DeleteScheme);
 
 module.exports = router;
