@@ -29,6 +29,7 @@ router.get(
   isSignedIn,
   getHackathonOfUser
 );
+router.post
 router.post(
   "/hackathon/createHackathon/:UserId",
   isSignedIn,

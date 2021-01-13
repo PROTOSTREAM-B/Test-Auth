@@ -22,7 +22,7 @@ const userSchema = new mongoose.Schema(
     profiledata: {},
     role: {
       type: Number,
-      default: 2,
+      default: 0,
     },
     hackathons: [
       {
