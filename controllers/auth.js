@@ -1,3 +1,4 @@
+require("dotenv").config();
 const User = require("../models/user");
 const mongoose = require("mongoose");
 const expressJwt = require("express-jwt");
@@ -7,6 +8,13 @@ const bcrypt = require("bcrypt");
 const saltRounds = 10;
 
 var _ = require("lodash");
+
+
+const client = require('twilio')(process.env.ACCOUNT_SID, process.env.AUTH_TOKEN);
+
+// console.log(process.env.ACCOUNT_SID);
+// console.log(process.env.AUTH_TOKEN);
+// console.log(process.env.SERVICE_ID);
 
 exports.register = (req, res) => {
   console.log("inside register");
@@ -70,6 +78,64 @@ exports.register = (req, res) => {
     return res.status(400).json("Invalid Email id");
   }
 };
+
+exports.otpsend = (req, res) => {
+
+  if (req.body.phonenumber) {
+    client
+    .verify
+    .services(process.env.SERVICE_ID)
+    .verifications
+    .create({
+        to: `+$91{req.body.phonenumber}`,
+        channel: req.body.channel==='call' ? 'call' : 'sms' 
+    })
+    .then(data => {
+        res.status(200).send({
+            message: "Verification is sent!!",
+            phonenumber: req.body.phonenumber,
+            data
+        });
+    })
+ } else {
+    res.status(400).send({
+        message: "Wrong phone number :(",
+        phonenumber: req.body.phonenumber,
+        data
+    });
+ }
+
+}
+
+exports.otpverify = (req, res) => {
+
+  if (req.body.phonenumber && (req.body.code).length === 4) {
+    client
+        .verify
+        .services(process.env.SERVICE_ID)
+        .verificationChecks
+        .create({
+            to: `+${req.body.phonenumber}`,
+            code: req.body.code
+        })
+        .then(data => {
+            if (data.status === "approved") {
+                res.status(200).send({
+                    message: "User is Verified!!",
+                    data
+                })
+            }
+        })
+} else {
+    res.status(400).send({
+        message: "Wrong phone number or code :(",
+        phonenumber: req.body.phonenumber,
+        data
+    })
+}
+
+
+}
 
 exports.login = (req, res) => {
   console.log("in login route");

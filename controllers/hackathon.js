@@ -2,7 +2,9 @@ const Hackathon = require("../models/hackathon");
 const User = require("../models/user");
 const opt = require("../otp");
 
-// const client = require("twilio")(opt.accountSid, opt.authToken);
+
+
+// console.log(process.env.ACCOUNT_SID);
 
 // console.log(opt.accountSid);
 // console.log(opt.serviceId);
