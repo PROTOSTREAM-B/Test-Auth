@@ -89,6 +89,7 @@ exports.login = (req, res) => {
               process.env.SECRET_KEY
             );
             res.cookie("token", token, { expire: new Date() + 7 });
+
             const {
               _id,
               projects,
@@ -132,7 +133,27 @@ exports.logout = (req, res) => {
 exports.isSignedIn = expressJwt({
   secret: process.env.SECRET_KEY,
   userProperty: "auth",
+  getToken: (req) => {
+    console.log(req);
+
+    console.log("inside token");
+  },
 });
+// exports.isSignedIn = (req,res,next)=>{
+//   const userProfile = JSON.parse(Buffer.from(req.headers.cookie.split('=')[1].split('.')[1], 'base64').toString('utf-8'));
+//   User.findOne({
+//       email : userProfile.userMail
+//   }).exec((err, user) => {
+//       if (user.role != 1) {
+//           return res.render('default/msg',{
+//               message:"Access denied!"
+//           });
+//       }
+//       else {
+//           next();
+//       }
+//   });
+// };
 
 exports.isAuthenticated = (req, res, next) => {
   console.log(req.profile);

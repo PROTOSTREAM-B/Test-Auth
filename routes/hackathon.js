@@ -3,7 +3,7 @@ const {
   findAllHackathons,
   getHackathonOfUser,
   createNewHackathon,
-  otpverification
+  otpverification,
 } = require("../controllers/hackathon");
 
 const { getUserById } = require("../controllers/user");
@@ -23,17 +23,18 @@ router.param("UserId", getUserById);
 //hackathon route---> static page have 2 buttons for see hackathon project list by year and,
 // create new hackathon project having by user have userID
 
-router.get("/hackathon/allHackathons", isSignedIn, findAllHackathons);
 router.get(
-  "/hackathon/:UserId",
+  "/hackathon/allHackathons",
   isSignedIn,
-  getHackathonOfUser
+  isAuthenticated,
+  findAllHackathons
 );
+router.get("/hackathon/:UserId", isSignedIn, getHackathonOfUser);
 router.post(
   "/hackathon/createHackathon/:UserId",
   isSignedIn,
   otpverification,
-  createNewHackathon,
+  createNewHackathon
 );
 router.delete(
   "/hackathon/:hackathonId/:UserId",

@@ -2,6 +2,7 @@ require("dotenv").config();
 
 const express = require("express");
 const bodyParser = require("body-parser");
+var cookieParser = require("cookie-parser");
 const mongoose = require("mongoose");
 const authRoute = require("./routes/auth");
 const userRoute = require("./routes/user");
@@ -11,13 +12,12 @@ const innotechRoute = require("./routes/innotech");
 const schemeRoute = require("./routes/scheme");
 const cors = require("cors");
 
-
-
 const app = express();
 
 app.use(express.json([]));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
+app.use(cookieParser());
 
 //! Routes..
 app.use(authRoute);
