@@ -2,8 +2,6 @@ const Hackathon = require("../models/hackathon");
 const User = require("../models/user");
 const opt = require("../otp");
 
-
-
 // console.log(process.env.ACCOUNT_SID);
 
 // console.log(opt.accountSid);

@@ -40,7 +40,7 @@ const userSchema = new mongoose.Schema(
       {
         type: ObjectId,
         ref: "Scheme",
-      }
+      },
     ],
   },
   { timestamps: true }

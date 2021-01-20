@@ -23,16 +23,8 @@ router.param("UserId", getUserById);
 // create new hackathon project having by user have userID
 
 router.get("/innotech/allInnotechs", isSignedIn, findAllInnotechs);
-router.get(
-  "/innotech/:UserId",
-  isSignedIn,
-  getInnotechOfUser
-);
-router.post(
-  "/innotech/createInnotech/:UserId",
-  isSignedIn,
-  createNewInnotech
-);
+router.get("/innotech/:UserId", isSignedIn, getInnotechOfUser);
+router.post("/innotech/createInnotech/:UserId", isSignedIn, createNewInnotech);
 router.delete(
   "/innotech/:innotechId/:UserId",
   isSignedIn,
