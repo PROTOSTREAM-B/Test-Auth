@@ -25,7 +25,7 @@ router.param("UserId", getUserById);
 
 router.get(
   "/hackathon/allHackathons",
-  // isSignedIn,
+  isSignedIn,
   // isAuthenticated,
   findAllHackathons
 );

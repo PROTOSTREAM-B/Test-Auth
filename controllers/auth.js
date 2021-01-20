@@ -193,6 +193,7 @@ exports.logout = (req, res) => {
 
 exports.isSignedIn = (req, res, next) => {
   console.log(req.headers);
+  console.log(req.session);
   next();
 };
 
