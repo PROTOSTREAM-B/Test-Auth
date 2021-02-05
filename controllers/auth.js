@@ -148,7 +148,10 @@ exports.login = (req, res) => {
               { _id: foundUser._id },
               process.env.SECRET_KEY
             );
-            res.cookie("token", token, { expire: new Date() + 7 });
+            // console.log(typeof token);
+            res.cookie("hii", "hiiia");
+            console.log(req.cookies);
+            // res.cookie("token", token);
 
             const {
               _id,
@@ -159,8 +162,12 @@ exports.login = (req, res) => {
               profiledata,
               role,
             } = foundUser;
-            return res.status(200).json({
+            // console.log(res.headers);
+            // return res.send("sending response");
+
+            return res.send({
               token,
+              cookies: res.cookies,
               user: {
                 _id,
                 projects,
@@ -171,6 +178,19 @@ exports.login = (req, res) => {
                 role,
               },
             });
+            // return res.status(200).json({
+            //   token,
+
+            //   user: {
+            //     _id,
+            //     projects,
+            //     hackathons,
+            //     email,
+            //     schemes,
+            //     profiledata,
+            //     role,
+            //   },
+            // });
           } else {
             return res.status(401).json({
               error: "Email or password do not match",
@@ -193,7 +213,8 @@ exports.logout = (req, res) => {
 
 exports.isSignedIn = (req, res, next) => {
   console.log(req.headers);
-  console.log(req.session);
+  console.log(req.cookies);
+  // console.log(req.session);
   next();
 };
 
