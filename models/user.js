@@ -42,6 +42,18 @@ const userSchema = new mongoose.Schema(
         ref: "Scheme",
       },
     ],
+    startups: [
+      {
+        type: ObjectId,
+        ref: "Startup",
+      },
+    ],
+    internship: [
+      {
+        type: ObjectId,
+        ref: "Internship",
+      },
+    ],
   },
   { timestamps: true }
 );
