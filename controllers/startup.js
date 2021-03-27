@@ -48,7 +48,7 @@ exports.createNewStartup = (req, res) => {
   });
 };
 
-exports.findStartupOfUser = (req, res) => {
+exports.getStartupById = (req, res) => {
   User.findById({ _id: req.profile._id })
     .populate("startups")
     .exec((err, user) => {

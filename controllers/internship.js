@@ -27,5 +27,12 @@ exports.createInternship = (req, res) => {
 };
 
 exports.findAllInternships = (req, res) => {
-  Internship.find().exec((err, internship));
+  Internship.find().exec((err, internship) => {
+    if (err || !internship) {
+      res.status(400).json({
+        error: "error",
+      });
+    }
+    res.status(200).json(internship);
+  });
 };
