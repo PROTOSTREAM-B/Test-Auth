@@ -9,17 +9,9 @@ const saltRounds = 10;
 
 var _ = require("lodash");
 
-// const client = require("twilio")(
-//   process.env.ACCOUNT_SID,
-//   process.env.AUTH_TOKEN
-// );
-
-// console.log(process.env.ACCOUNT_SID);
-// console.log(process.env.AUTH_TOKEN);
-// console.log(process.env.SERVICE_ID);
-
 exports.register = (req, res) => {
   console.log("inside register");
+ 
   let regx = /^([a-z]+)(\.)([0-9]{4})([a-z]{2})([0-9]{4})(@)(kiet)(\.)(edu)$/;
   if (regx.test(req.body.email)) {
     let testemail = req.body.email;
@@ -34,6 +26,7 @@ exports.register = (req, res) => {
       ProfileBranch: probranch,
       ProfileYear: proyear,
     };
+ 
 
     User.findOne({ email: req.body.email }, function (err, foundUser) {
       console.log(foundUser);
@@ -60,6 +53,7 @@ exports.register = (req, res) => {
                   name: proname,
                   email: newUser.email,
                   _id: newUser._id,
+                  PhoneVerfication: newUser.PhoneVerfication,
                 },
                 profiledb: {
                   Profilename: proname,
@@ -67,6 +61,7 @@ exports.register = (req, res) => {
                   ProfileBranch: probranch,
                   ProfileYear: proyear,
                 },
+                
               });
             } else {
               return res.status(400).json({
@@ -82,54 +77,7 @@ exports.register = (req, res) => {
   }
 };
 
-exports.otpsend = (req, res) => {
-  if (req.body.phonenumber) {
-    client.verify
-      .services(process.env.SERVICE_ID)
-      .verifications.create({
-        to: `+$91{req.body.phonenumber}`,
-        channel: req.body.channel === "call" ? "call" : "sms",
-      })
-      .then((data) => {
-        res.status(200).send({
-          message: "Verification is sent!!",
-          phonenumber: req.body.phonenumber,
-          data,
-        });
-      });
-  } else {
-    res.status(400).send({
-      message: "Wrong phone number :(",
-      phonenumber: req.body.phonenumber,
-      data,
-    });
-  }
-};
 
-exports.otpverify = (req, res) => {
-  if (req.body.phonenumber && req.body.code.length === 4) {
-    client.verify
-      .services(process.env.SERVICE_ID)
-      .verificationChecks.create({
-        to: `+${req.body.phonenumber}`,
-        code: req.body.code,
-      })
-      .then((data) => {
-        if (data.status === "approved") {
-          res.status(200).send({
-            message: "User is Verified!!",
-            data,
-          });
-        }
-      });
-  } else {
-    res.status(400).send({
-      message: "Wrong phone number or code :(",
-      phonenumber: req.body.phonenumber,
-      data,
-    });
-  }
-};
 
 exports.login = (req, res) => {
   console.log("in login route");
@@ -161,6 +109,7 @@ exports.login = (req, res) => {
               email,
               profiledata,
               role,
+              phonestatus,
             } = foundUser;
             // console.log(res.headers);
             // return res.send("sending response");
@@ -176,6 +125,7 @@ exports.login = (req, res) => {
                 schemes,
                 profiledata,
                 role,
+                phonestatus,
               },
             });
             // return res.status(200).json({

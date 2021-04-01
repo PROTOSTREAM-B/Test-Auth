@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 
 const startupSchema = new mongoose.Schema(
   {
+
     StartupName: {
       type: String,
       required: true,

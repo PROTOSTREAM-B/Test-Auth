@@ -16,6 +16,21 @@ router.param("userId", getUserById);
 router.param("startupId", getStartupById);
 
 router.post(
+  "/startup/PhoneLogin/:userId",
+  isSignedIn,
+  isSens,
+  PhoneLogin
+);
+
+router.post(
+  "/startup/:PhoneLoginNumber/PhoneVerify/:userId",
+  isSignedIn,
+  isSens,
+  PhoneVerify
+);
+
+
+router.post(
   "/startup/createStartup/:userId",
   isSignedIn,
   isSens,

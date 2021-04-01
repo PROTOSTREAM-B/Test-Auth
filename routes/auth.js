@@ -4,17 +4,11 @@ const {
   login,
   logout,
   isSignedIn,
-  otpsend,
-  otpverify,
 } = require("../controllers/auth");
 
 const router = express.Router();
 
-router.post("/register", register);
-
-router.post("/register/otps", otpsend);
-
-router.post("/register/otps/otpv", otpverify);
+router.get("/register", register);
 
 router.post("/login", login);
 

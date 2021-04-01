@@ -4,6 +4,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 var cookieParser = require("cookie-parser");
 const mongoose = require("mongoose");
+const otproute = require('./routes/otp');
 const authRoute = require("./routes/auth");
 const userRoute = require("./routes/user");
 const projectRoute = require("./routes/projectRoute");
@@ -19,6 +20,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 app.use(cookieParser());
 
+const client = require('twilio')(process.env.ACCOUNT_SID, process.env.AUTH_TOKEN);
+
 //! Routes..
 app.use(authRoute);
 app.use(projectRoute);
@@ -26,13 +29,15 @@ app.use(hackRoute);
 app.use(innotechRoute);
 app.use(schemeRoute);
 app.use(userRoute);
-
+app.use(otproute);
 //! DataBase..
 mongoose.connect(process.env.MONGODB_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
 mongoose.set("useCreateIndex", true);
+
+
 
 app.listen(process.env.PORT, function () {
   console.log("Server is running on port " + process.env.PORT);

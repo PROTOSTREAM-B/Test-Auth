@@ -1,12 +1,8 @@
 const Hackathon = require("../models/hackathon");
 const User = require("../models/user");
-const opt = require("../otp");
 
-// console.log(process.env.ACCOUNT_SID);
 
-// console.log(opt.accountSid);
-// console.log(opt.serviceId);
-// console.log(opt.authToken);
+
 
 exports.getHackathonOfUser = (req, res) => {
   console.log("inside getHackathonOfUser");
@@ -68,7 +64,7 @@ exports.otpverification = (req, res, next) => {
 exports.createNewHackathon = (req, res) => {
   let hackathons = [];
   const hackathon = new Hackathon(req.body);
-
+  
   console.log(hackathon);
 
   hackathon.save((err, hackathon) => {

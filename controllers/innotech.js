@@ -1,6 +1,8 @@
+require('dotenv/config');
 const Innotech = require("../models/innotech");
 const Hackathon = require("../models/innotech");
 const User = require("../models/user");
+
 
 exports.getInnotechOfUser = (req, res) => {
   console.log("inside getInnotechOfUser");
@@ -15,6 +17,7 @@ exports.getInnotechOfUser = (req, res) => {
 
       return res.status(200).json(user.innotechs);
     });
+    
 };
 exports.getInnotechById = (req, res, next, id) => {
   console.log("in getUserById");
@@ -40,7 +43,11 @@ exports.findAllInnotechs = (req, res) => {
   });
 };
 
+
+
 exports.createNewInnotech = (req, res) => {
+console.log(req.profile.PhoneVerfication);
+  if(req.profile.PhoneVerfication==="Not-Verified"){
   let innotechs = [];
   const innotech = new Innotech(req.body);
   console.log(innotech);
@@ -68,6 +75,10 @@ exports.createNewInnotech = (req, res) => {
 
     res.status(200).json(innotech);
   });
+}
+else{
+  res.status(400).json({error:"Phone not verified"});
+}
 };
 
 exports.DeleteInnotech = (req, res) => {

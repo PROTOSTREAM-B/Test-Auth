@@ -2,7 +2,13 @@ const Internship = require("../models/internship");
 const Startup = require("../models/startup");
 const User = require("../models/user");
 
+
+
+
 exports.createNewStartup = (req, res) => {
+
+ // console.log(req.profile.PhoneVerfication);
+  if(req.profile.PhoneVerfication==="Verified"){
   const startup = new Startup(req.body);
   startup.save((err, startup) => {
     if (err) {
@@ -46,6 +52,10 @@ exports.createNewStartup = (req, res) => {
 
     res.status(200).json(startup);
   });
+}
+else{
+  res.status(400).json({error:"Phone not verified"});
+}
 };
 
 exports.getStartupById = (req, res) => {

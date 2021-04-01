@@ -3,6 +3,11 @@ const { ObjectId } = mongoose.Schema;
 
 const userSchema = new mongoose.Schema(
   {
+    phonestatus:{
+      type: String,
+      required: false,
+      default: "Not-verify",
+    },
     email: {
       type: String,
       required: true,
