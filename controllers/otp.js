@@ -4,10 +4,11 @@ const client = require('twilio')(process.env.ACCOUNT_SID, process.env.AUTH_TOKEN
 
 // Login Endpoint
 exports.otplogin=(req,res) => {
-    // console.log(req.body.phonenumber);
+    console.log("in otp login route");
     // console.log(req.body.channel);
-    console.log(req.profile.phonestatus);
+   // console.log(req.profile.phonestatus);
      if (req.body.phonenumber) {
+         if(req.profile.sid===null && req.profile.verification===false){
         client
         .verify
         .services(process.env.SERVICE_ID)
@@ -27,7 +28,7 @@ exports.otplogin=(req,res) => {
                 });
                 User.findOneAndUpdate(
                     { _id: req.profile._id },
-                    { phonestatus: data.status },
+                    { phonestatus: data.status, sid: data.sid, verification: false },
                     { new: true },
                     function(err, result) {
                       if (err) {
@@ -57,20 +58,25 @@ exports.otplogin=(req,res) => {
         //         }
         //       );
         // }
+    } else{
+        res.status(404).send({ 
+            message: "OTP already sent or you are already verified!!",
+        });
+    }
      } else {
         res.status(400).send({
             message: "Wrong phone number :(",
             phonenumber: req.body.phonenumber,
-            data
         });
      }
 };
 
 // Verify Endpoint
 exports.otpverify=(req, res) => {
-    console.log(req.profile._id);
-    console.log(req.profile.phonestatus);
+    console.log("in otp verify route");
+    //console.log(req.profile.phonestatus);
     if (req.body.phonenumber && (req.body.code).length === 6) {
+        if(req.profile.verification===false){
         client
             .verify
             .services(process.env.SERVICE_ID)
@@ -80,7 +86,7 @@ exports.otpverify=(req, res) => {
                 code: req.body.code
             })
             .then(data => {
-                if (data.status === "approved") {
+                if (data.status === "approved" && data.sid===req.profile.sid) {
                     
                     res.status(200).send({
                         message: "User is Verified!!",
@@ -88,7 +94,7 @@ exports.otpverify=(req, res) => {
                     });
                     User.findOneAndUpdate(
                         { _id: req.profile._id },
-                        { phonestatus: data.status },
+                        { phonestatus: data.status, verification: true },
                         { new: true },
                         function(err, result) {
                           if (err) {
@@ -100,15 +106,21 @@ exports.otpverify=(req, res) => {
                         }
                       );
                 }
-                else if (data.status === "approved") {
-                    
-                }
+               else{
+                   res.status(400).send({
+                       message: "Using wrong sid or not request otp for verification or wrong otp",
+                   })
+               }
             });
+        } else{
+            res.status(400).send({
+                message: "You are already verified!!",
+            });
+        }
     } else {
         res.status(400).send({
-            message: "Wrong phone number or code :(",
+            message: "Wrong phone number or code:(",
             phonenumber: req.body.phonenumber,
-            data
         })
     }
 };

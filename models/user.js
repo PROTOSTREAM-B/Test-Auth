@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { validateRequestWithBody } = require("twilio");
 const { ObjectId } = mongoose.Schema;
 
 const userSchema = new mongoose.Schema(
@@ -7,6 +8,16 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: false,
       default: "Not-verify",
+    },
+    sid:{
+      type: String,
+      required: false,
+      default: null,
+    },
+    verification:{
+      type: Boolean,
+      default: false,
+      required: false,
     },
     email: {
       type: String,

@@ -8,7 +8,7 @@ const User = require("../models/user");
 exports.createNewStartup = (req, res) => {
 
  // console.log(req.profile.PhoneVerfication);
-  if(req.profile.PhoneVerfication==="Verified"){
+  if(req.profile.phonestatus==="approved"){
   const startup = new Startup(req.body);
   startup.save((err, startup) => {
     if (err) {
@@ -54,7 +54,7 @@ exports.createNewStartup = (req, res) => {
   });
 }
 else{
-  res.status(400).json({error:"Phone not verified"});
+  res.status(400).json({error:"You have not proper register your phone no. for Startup!!"});
 }
 };
 
