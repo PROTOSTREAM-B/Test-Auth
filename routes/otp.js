@@ -18,9 +18,9 @@ router.param("UserId", getUserById);
 
 
 
-router.post("/:UserId/otplogin", isSignedIn, otplogin);
+router.post("/otplogin/:UserId", isSignedIn, otplogin);
 
-router.post("/:UserId/otpverify", isSignedIn, otpverify);
+router.post("/otpverify/:UserId", isSignedIn, otpverify);
 
 
 module.exports = router;

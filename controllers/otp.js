@@ -40,6 +40,9 @@ exports.otplogin=(req,res) => {
                     }
                   );
             }
+            else{
+    
+            }
             console.log(data.status);
         });
         // if(data.status==="pending"){
