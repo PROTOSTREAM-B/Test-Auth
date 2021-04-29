@@ -30,12 +30,41 @@ exports.findallSchemes = (req, res) => {
 
 exports.createNewScheme = (req, res) => {
   const scheme = new Scheme(req.body);
+  const user = req.profile;
+  scheme.user = user;
+
   scheme.save((err, scheme) => {
     if (err) {
       res.status(500).json({
         error: err,
       });
     }
+    let schemes = [];
+    schemes.push({
+      _id: scheme._id,
+      compTitle: req.body.compTitle,
+      organizer: req.body.organizer,
+      deadline: req.body.deadline,
+      starting: req.body.starting,
+      ending: req.body.ending,
+      registrationLink: req.body.registrationLink,
+      // fileLink: req.bdoy.fileLink,
+      // imageLink: req.body.imageLink,
+    });
+
+    User.findOneAndUpdate(
+      { _id: req.profile._id },
+      { $push: { schemes: schemes } },
+      { new: true },
+      (err, updatedUser) => {
+        if (err) {
+          return res.json({
+            error: err,
+          });
+        }
+      }
+    );
+
     res.status(200).json(scheme);
   });
 };

@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { ObjectId } = mongoose.Schema;
 
 const schemeSchema = new mongoose.Schema(
   {
@@ -27,12 +28,16 @@ const schemeSchema = new mongoose.Schema(
       type: String,
     },
     fileLink: {
-      required: true,
+      // required: true,
       type: String,
     },
     imageLink: {
-      required: true,
+      // required: true,
       type: String,
+    },
+    user: {
+      type: ObjectId,
+      ref: "User",
     },
   },
 
