@@ -11,7 +11,7 @@ var _ = require("lodash");
 
 exports.register = (req, res) => {
   console.log("inside register");
- 
+
   let regx = /^([a-z]+)(\.)([0-9]{4})([a-z]{2})([0-9]{4})(@)(kiet)(\.)(edu)$/;
   if (regx.test(req.body.email)) {
     let testemail = req.body.email;
@@ -26,10 +26,9 @@ exports.register = (req, res) => {
       ProfileBranch: probranch,
       ProfileYear: proyear,
     };
- 
 
     User.findOne({ email: req.body.email }, function (err, foundUser) {
-      console.log(foundUser);
+      // console.log("[Found User]",foundUser);
       if (foundUser) {
         return res.json({ error: "Email already registered" });
       } else {
@@ -39,29 +38,39 @@ exports.register = (req, res) => {
             password: hash,
             profiledata: profiledata,
           });
-          newUser.save(function (err) {
+
+          newUser.save(function (err, savedUser) {
+            // console.log("[SavedUser]",savedUser);
             if (!err) {
               const token = jwt.sign(
                 { _id: newUser._id },
                 process.env.SECRET_KEY
               );
               res.cookie("token", token, { expire: new Date() + 7 });
-              console.log(res.cookie);
-              return res.status(400).json({
-                message: "User got registered",
-                Userdata: {
-                  name: proname,
-                  email: newUser.email,
-                  _id: newUser._id,
-                  PhoneVerfication: newUser.PhoneVerfication,
+              const {
+                _id,
+                projects,
+                hackathons,
+                schemes,
+                email,
+                profiledata,
+                role,
+                phonestatus,
+              } = savedUser;
+
+              return res.send({
+                token,
+                cookies: res.cookies,
+                user: {
+                  _id,
+                  projects,
+                  hackathons,
+                  email,
+                  schemes,
+                  profiledata,
+                  role,
+                  phonestatus,
                 },
-                profiledb: {
-                  Profilename: proname,
-                  ProfileID: proid,
-                  ProfileBranch: probranch,
-                  ProfileYear: proyear,
-                },
-                
               });
             } else {
               return res.status(400).json({
@@ -76,8 +85,6 @@ exports.register = (req, res) => {
     return res.status(400).json("Invalid Email id");
   }
 };
-
-
 
 exports.login = (req, res) => {
   console.log("in login route");
