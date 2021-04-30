@@ -23,7 +23,9 @@
     "md5": "^2.3.0",
     "mongoose": "^5.11.8",
     "mongoose-encryption": "^2.0.3",
+    "multer": "^1.4.2",
     "nodemon": "^2.0.6",
-    "twilio": "^3.54.2"
+    "twilio": "^3.54.2",
+    "uuidv4": "^6.2.7"
   }
 }

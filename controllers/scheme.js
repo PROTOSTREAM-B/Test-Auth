@@ -29,6 +29,7 @@ exports.findallSchemes = (req, res) => {
 };
 
 exports.createNewScheme = (req, res) => {
+  console.log(req.file);
   const scheme = new Scheme(req.body);
   const user = req.profile;
   scheme.user = user;

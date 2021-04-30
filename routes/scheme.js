@@ -1,4 +1,26 @@
 const express = require("express");
+const multer = require("multer");
+
+const multerStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    if(file.fieldname==="image"){
+        cb(null, "public/image");
+      }
+    else if(file.fieldname==="files"){
+        cb(null, "public/files");
+    }
+  },
+  filename: (req, file, cb) => {
+      if(file.fieldname==="image"){
+          cb(null, file.fieldname + '-' + Date.now() + file.originalname);
+      }
+      else if(file.fieldname==="files"){
+          cb(null, file.fieldname + '-' + Date.now() + file.originalname);
+      }
+  },
+});
+
+const upload = multer({storage: multerStorage});
 
 const {
   findallSchemes,
@@ -22,7 +44,11 @@ router.param("UserId", getUserById);
 router.get("/schemes/allSchemes", isSignedIn, findallSchemes);
 
 router.post(
-  "/schemes/createScheme/:UserId",
+  "/schemes/createScheme/:UserId",upload.fields([{
+  name: 'image', maxCount: 1
+}, {
+  name: 'files', maxCount: 1
+}]),
   isSignedIn,
   isTBI,
   createNewScheme
