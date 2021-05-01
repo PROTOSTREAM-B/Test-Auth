@@ -1,7 +1,7 @@
 const Scheme = require("../models/scheme");
 const User = require("../models/user");
 
-// ERROR: DISSCUSS ON WHATSAPP
+// ERROR: NEW ERROR
 
 exports.getSchemeById = (req, res, next, id) => {
   console.log("in getSchemeById");
@@ -29,8 +29,16 @@ exports.findallSchemes = (req, res) => {
 };
 
 exports.createNewScheme = (req, res) => {
-  console.log(req.file);
+ // console.log(req);
+ // console.log(req.files);
+  console.log(req.files.files);
+  console.log(req.files.image);
+  console.log(req.files.files[0].path);   //path have to save as a string
+  console.log(req.files.image[0].path);   //path have to save as a string
+  let filepath=req.files.files;
+  let imagepath=req.files.image;
   const scheme = new Scheme(req.body);
+  schemeid=scheme._id;
   const user = req.profile;
   scheme.user = user;
 
@@ -40,22 +48,22 @@ exports.createNewScheme = (req, res) => {
         error: err,
       });
     }
-    let schemes = [];
-    schemes.push({
-      _id: scheme._id,
-      compTitle: req.body.compTitle,
-      organizer: req.body.organizer,
-      deadline: req.body.deadline,
-      starting: req.body.starting,
-      ending: req.body.ending,
-      registrationLink: req.body.registrationLink,
-      // fileLink: req.bdoy.fileLink,
-      // imageLink: req.body.imageLink,
-    });
+
+    let newdata={
+      "_id": schemeid,
+      "compTitle": req.body.compTitle,
+      "organizer": req.body.organizer,
+      "deadline": req.body.deadline,
+      "starting": req.body.starting,
+      "ending": req.body.ending,
+      "registrationLink": req.body.registrationLink,
+      "files": filepath,    //ERROR ON POSTMAN-- Validation Error, Entity not saving in db
+      "image": imagepath,   //ERROR ON POSTMAN-- Validation Error, Entity not saving in db
+    };
 
     User.findOneAndUpdate(
       { _id: req.profile._id },
-      { $push: { schemes: schemes } },
+      { $push: { schemes: newdata } },
       { new: true },
       (err, updatedUser) => {
         if (err) {

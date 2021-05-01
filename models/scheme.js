@@ -27,13 +27,13 @@ const schemeSchema = new mongoose.Schema(
       required: true,
       type: String,
     },
-    fileLink: {
-      // required: true,
-      type: String,
+    files: {
+     required: true,
+      type: Object,
     },
-    imageLink: {
-      // required: true,
-      type: String,
+    image: {
+    required: true,
+      type: Object,
     },
     user: {
       type: ObjectId,
