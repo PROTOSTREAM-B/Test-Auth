@@ -1,5 +1,6 @@
-const express = require("express");
 const multer = require("multer");
+const express = require("express");
+const { uuid } = require('uuidv4');
 
 const multerStorage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -12,10 +13,10 @@ const multerStorage = multer.diskStorage({
   },
   filename: (req, file, cb) => {
       if(file.fieldname==="image"){
-          cb(null, file.fieldname + '-' + Date.now() + file.originalname);
+          cb(null, file.fieldname + '-' + uuid + file.originalname);
       }
       else if(file.fieldname==="files"){
-          cb(null, file.fieldname + '-' + Date.now() + file.originalname);
+          cb(null, file.fieldname + '-' + uuid + file.originalname);
       }
   },
 });
