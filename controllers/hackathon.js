@@ -60,7 +60,9 @@ exports.otpverification = (req, res, next) => {
 
 exports.createNewHackathon = (req, res) => {
   let hackathons = [];
+  console.log(req.body);
   const hackathon = new Hackathon(req.body);
+
 
 
   hackathon.save((err, hackathon) => {
