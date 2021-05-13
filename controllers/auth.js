@@ -135,19 +135,7 @@ exports.login = (req, res) => {
                 phonestatus,
               },
             });
-            // return res.status(200).json({
-            //   token,
-
-            //   user: {
-            //     _id,
-            //     projects,
-            //     hackathons,
-            //     email,
-            //     schemes,
-            //     profiledata,
-            //     role,
-            //   },
-            // });
+           
           } else {
             return res.status(401).json({
               error: "Email or password do not match",

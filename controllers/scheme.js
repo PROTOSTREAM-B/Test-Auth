@@ -29,6 +29,8 @@ exports.findallSchemes = (req, res) => {
 };
 
 exports.createNewScheme = (req, res) => {
+
+  console.log("[INSIDE CREATENEWSCHEME]");
  // console.log(req);
  // console.log(req.files);
   console.log(req.files.files);

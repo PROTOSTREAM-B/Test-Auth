@@ -32,7 +32,7 @@ app.use(schemeRoute);
 app.use(userRoute);
 app.use(otproute);
 //! DataBase..
-mongoose.connect(process.env.MONGO_ATLAS, {
+mongoose.connect(process.env.MONGO_ATLAS || process.env.MONGODB_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
