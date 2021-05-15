@@ -1,5 +1,6 @@
 const Scheme = require("../models/scheme");
 const User = require("../models/user");
+const fs = require('fs');
 
 // ERROR: DISSCUSS ON WHATSAPP
 
@@ -29,10 +30,24 @@ exports.findallSchemes = (req, res) => {
 };
 
 exports.createNewScheme = (req, res) => {
-  console.log(req.file);
+  let img= fs.readFileSync(req.files.image[0].path);
+  let file= fs.readFileSync(req.files.files[0].path);
+  let encode_img= img.toString('base64');
+  let encode_file= file.toString('base64');
+  let final_img ={
+    contentType: req.files.image[0].mimetype,
+    image: Buffer.from(encode_img, 'base64')
+  }
+  let final_file={
+    contentType: req.files.files[0].mimetype,
+    file: Buffer.from(encode_file, 'base64')
+  }
+  console.log(final_file);
+  console.log(final_img);
   const scheme = new Scheme(req.body);
   const user = req.profile;
   scheme.user = user;
+
 
   scheme.save((err, scheme) => {
     if (err) {
@@ -49,10 +64,10 @@ exports.createNewScheme = (req, res) => {
       starting: req.body.starting,
       ending: req.body.ending,
       registrationLink: req.body.registrationLink,
-      // fileLink: req.bdoy.fileLink,
-      // imageLink: req.body.imageLink,
+      fileLink: final_file,
+      imageLink: final_img,
     });
-
+console.log(schemes);
     User.findOneAndUpdate(
       { _id: req.profile._id },
       { $push: { schemes: schemes } },
