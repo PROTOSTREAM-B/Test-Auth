@@ -1,27 +1,4 @@
-const multer = require("multer");
 const express = require("express");
-const { uuid } = require('uuidv4');
-
-const multerStorage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    if(file.fieldname==="image"){
-        cb(null, "public/image");
-      }
-    else if(file.fieldname==="files"){
-        cb(null, "public/files");
-    }
-  },
-  filename: (req, file, cb) => {
-      if(file.fieldname==="image"){
-          cb(null, file.fieldname + '-' + uuid + file.originalname);
-      }
-      else if(file.fieldname==="files"){
-          cb(null, file.fieldname + '-' + uuid + file.originalname);
-      }
-  },
-});
-
-const upload = multer({storage: multerStorage});
 
 const {
   findallSchemes,
@@ -44,17 +21,16 @@ router.param("UserId", getUserById);
 
 router.get("/schemes/allSchemes", isSignedIn, findallSchemes);
 
+
 router.post(
-  "/schemes/createScheme/:UserId",upload.fields([{
-  name: 'image', maxCount: 1
-}, {
-  name: 'files', maxCount: 1
-}]),
+  "/schemes/createScheme/:UserId",
   isSignedIn,
-  isTBI,
+  isAdmin,
   createNewScheme
-);
-
-router.delete("/schemes/:schemeId/:UserId", isSignedIn, isAdmin, DeleteScheme);
-
-module.exports = router;
+  );
+  
+  router.delete("/schemes/:schemeId/:UserId", isSignedIn, isAdmin, DeleteScheme);
+  
+  module.exports = router;
+  
+  

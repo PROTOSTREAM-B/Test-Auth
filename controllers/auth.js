@@ -157,8 +157,8 @@ exports.logout = (req, res) => {
 // protected Routes..
 
 exports.isSignedIn = (req, res, next) => {
-  console.log(req.headers);
-  console.log(req.cookies);
+  // console.log(req.headers);
+  // console.log(req.cookies);
   // console.log(req.session);
   next();
 };
@@ -192,7 +192,7 @@ exports.isAuthenticated = (req, res, next) => {
 };
 
 exports.isAdmin = (req, res, next) => {
-  console.log(req.profile);
+  // console.log(req.profile);
   if (req.profile.role === 3) {
     next();
   } else {
