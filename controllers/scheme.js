@@ -1,7 +1,7 @@
 const Scheme = require("../models/scheme");
 const User = require("../models/user");
-
-// ERROR: NEW ERROR
+const formidable = require("formidable");
+const fs = require("fs");
 
 exports.getSchemeById = (req, res, next, id) => {
   console.log("in getSchemeById");
@@ -28,58 +28,6 @@ exports.findallSchemes = (req, res) => {
   });
 };
 
-exports.createNewScheme = (req, res) => {
-
-  console.log("[INSIDE CREATENEWSCHEME]");
- // console.log(req);
- // console.log(req.files);
-  console.log(req.files.files);
-  console.log(req.files.image);
-  console.log(req.files.files[0].path);   //path have to save as a string
-  console.log(req.files.image[0].path);   //path have to save as a string
-  let filepath=req.files.files;
-  let imagepath=req.files.image;
-  const scheme = new Scheme(req.body);
-  schemeid=scheme._id;
-  const user = req.profile;
-  scheme.user = user;
-
-  scheme.save((err, scheme) => {
-    if (err) {
-      res.status(500).json({
-        error: err,
-      });
-    }
-
-    let newdata={
-      "_id": schemeid,
-      "compTitle": req.body.compTitle,
-      "organizer": req.body.organizer,
-      "deadline": req.body.deadline,
-      "starting": req.body.starting,
-      "ending": req.body.ending,
-      "registrationLink": req.body.registrationLink,
-      "files": filepath,    //ERROR ON POSTMAN-- Validation Error, Entity not saving in db
-      "image": imagepath,   //ERROR ON POSTMAN-- Validation Error, Entity not saving in db
-    };
-
-    User.findOneAndUpdate(
-      { _id: req.profile._id },
-      { $push: { schemes: newdata } },
-      { new: true },
-      (err, updatedUser) => {
-        if (err) {
-          return res.json({
-            error: err,
-          });
-        }
-      }
-    );
-
-    res.status(200).json(scheme);
-  });
-};
-
 exports.DeleteScheme = (req, res) => {
   let scheme = req.scheme;
   console.log(req.scheme);
@@ -92,6 +40,36 @@ exports.DeleteScheme = (req, res) => {
     res.json({
       message: "scheme deleted",
       deletedScheme,
+    });
+  });
+};
+
+exports.createNewScheme = (req, res) => {
+  let form = new formidable.IncomingForm();
+  // console.log(form);
+  form.keepExtensions = true;
+  form.parse(req, (err, fields, file) => {
+    if (err) {
+      console.log("error");
+      console.log(err);
+      return res.status(400).json({
+        error: "problem with uploads",
+      });
+    }
+
+    let scheme = new Scheme(fields);
+    scheme.details.data = fs.readFileSync(file.details.path);
+    scheme.details.contentType = file.details.type;
+    scheme.image.data = fs.readFileSync(file.image.path);
+    scheme.image.contentType = file.image.type;
+
+    scheme.save((err, scheme) => {
+      if (err) {
+        res.status(400).json({
+          error: "saving failed",
+        });
+      }
+      res.status(200).json(scheme);
     });
   });
 };
