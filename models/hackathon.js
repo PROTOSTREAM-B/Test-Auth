@@ -9,7 +9,7 @@ const hackathonSchema = new mongoose.Schema(
       type: String,
     },
     Branch: {
-      type: Number,
+      type: String,
     },
     MemberBranch: {
       type: String,
@@ -39,18 +39,18 @@ const hackathonSchema = new mongoose.Schema(
       type: String,
     },
     MemberRollNo: {
-      type: Number,
+      type: String,
     },
 
     MemberRollNo1: {
-      type: Number,
+      type: String,
     },
 
     MemberRollNo2: {
-      type: Number,
+      type: String,
     },
     RollNo: {
-      type: Number,
+      type: String,
     },
     TeamLeader: {
       type: String,

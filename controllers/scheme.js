@@ -17,7 +17,7 @@ exports.getSchemeById = (req, res, next, id) => {
 };
 
 exports.findallSchemes = (req, res) => {
-  console.log("inside scheme route");
+  // console.log("inside scheme route");
   Scheme.find({}, (err, schemes) => {
     if (err) {
       return res.json({
@@ -46,7 +46,6 @@ exports.DeleteScheme = (req, res) => {
 
 exports.createNewScheme = (req, res) => {
   let form = new formidable.IncomingForm();
-  // console.log(form);
   form.keepExtensions = true;
   form.parse(req, (err, fields, file) => {
     if (err) {

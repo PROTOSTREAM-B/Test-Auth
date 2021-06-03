@@ -24,8 +24,8 @@ router.get("/schemes/allSchemes", isSignedIn, findallSchemes);
 
 router.post(
   "/schemes/createScheme/:UserId",
-  isSignedIn,
-  isAdmin,
+  // isSignedIn,
+  // isAdmin,
   createNewScheme
   );
   
