@@ -9,19 +9,19 @@ const multerStorage = multer.diskStorage({
       if(file.fieldname==="image"){
         fs.access("public", function(error) {
           if (error) {
-            console.log("Public Directory does not exist.")
+            // console.log("Public Directory does not exist.")
             fs.mkdir('./public/',(err)=>{
               if(err) {
                 return console.log(err);
               }
               else{
-                console.log("Public Directory created.");
+                // console.log("Public Directory created.");
                 let dir= './public';
                 fs.mkdir(dir + '/image/', (err)=> {
                   if (err){
                     return console.error(err);
                   } else{
-                    console.log("Image Directory created.");
+                    // console.log("Image Directory created.");
                     cb(null, "public/image");
                   }
                 });
@@ -29,22 +29,22 @@ const multerStorage = multer.diskStorage({
             });
           } 
           else {
-            console.log("Public Directory exists.")
+            // console.log("Public Directory exists.")
             fs.access('public/image', function(error) {
                   if(error) {
-                    console.log("Image Directory does not exist!!");
+                    // console.log("Image Directory does not exist!!");
                     fs.mkdir('./public/image',(err)=>{
                       if(err) {
                         return console.log(err);
                       }
                       else{
-                        console.log("Image directory created.");
+                        // console.log("Image directory created.");
                         cb(null, "public/image");
                       }
                     });
                   }
                   else{
-                    console.log("Image Directory exists!!");
+                    // console.log("Image Directory exists!!");
                     cb(null, "public/image");
                   }
               });
@@ -55,19 +55,19 @@ const multerStorage = multer.diskStorage({
       else if(file.fieldname==="files"){
         fs.access("public", function(error) {
           if (error) {
-            console.log("Public Directory does not exist!!")
+            // console.log("Public Directory does not exist!!")
             fs.mkdir('./public/',(err)=>{
               if(err) {
                 return console.log(err);
               }
               else{
-                console.log("Public Directory created.");
+                // console.log("Public Directory created.");
                 let dir= './public';
                 fs.mkdir(dir + '/files/', (err)=> {
                   if (err) {
                     return console.error(err);
                   } else{
-                    console.log("File Directory created.");
+                    // console.log("File Directory created.");
                     cb(null, "public/files");
                   }
                 });
@@ -75,22 +75,22 @@ const multerStorage = multer.diskStorage({
             });
           } 
           else {
-            console.log("Public Directory exists.")
+            // console.log("Public Directory exists.")
             fs.access('public/files', function(error) {
                   if(error) {
-                    console.log("Files Directory does not exist!!");
+                    // console.log("Files Directory does not exist!!");
                     fs.mkdir('./public/files',(err)=>{
                       if(err) {
                         return console.log(err);
                       }
                       else{
-                        console.log("Files directory created.");
+                        // console.log("Files directory created.");
                         cb(null, "public/files");
                       }
                     });
                   }
                   else{
-                    console.log("Files Directory exists!!");
+                    // console.log("Files Directory exists!!");
                     cb(null, "public/files");
                   }
               });
@@ -133,6 +133,7 @@ router.get("/schemes/allSchemes", isSignedIn, findallSchemes);
 
 router.post(
   "/schemes/createScheme/:UserId",upload.fields([{
+    
   name: 'image', maxCount: 1
 }, {
   name: 'files', maxCount: 1

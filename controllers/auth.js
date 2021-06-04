@@ -169,8 +169,8 @@ exports.logout = (req, res) => {
 // protected Routes..
 
 exports.isSignedIn = (req, res, next) => {
-  console.log(req.headers);
-  console.log(req.cookies);
+  // console.log(req.headers);
+  // console.log(req.cookies);
   // console.log(req.session);
   next();
 };
