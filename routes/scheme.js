@@ -131,6 +131,7 @@ router.param("UserId", getUserById);
 
 router.get("/schemes/allSchemes", isSignedIn, findallSchemes);
 
+
 router.post(
   "/schemes/createScheme/:UserId",upload.fields([{
   name: 'image', maxCount: 1
@@ -141,7 +142,9 @@ router.post(
   isTBI,
   createNewScheme
 );
-
-router.delete("/schemes/:schemeId/:UserId", isSignedIn, isAdmin, DeleteScheme);
-
-module.exports = router;
+  
+  router.delete("/schemes/:schemeId/:UserId", isSignedIn, isAdmin, DeleteScheme);
+  
+  module.exports = router;
+  
+  

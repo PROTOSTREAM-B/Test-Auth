@@ -32,7 +32,7 @@ app.use(schemeRoute);
 app.use(userRoute);
 app.use(otproute);
 //! DataBase..
-mongoose.connect(process.env.MONGODB_URL, {
+mongoose.connect(process.env.MONGO_ATLAS || process.env.MONGODB_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -40,6 +40,6 @@ mongoose.set("useCreateIndex", true);
 
 
 
-app.listen(process.env.PORT, function () {
+app.listen(process.env.PORT || 3000, function () {
   console.log("Server is running on port " + process.env.PORT);
 });

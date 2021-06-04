@@ -33,7 +33,7 @@ router.get("/hackathon/:UserId", isSignedIn, getHackathonOfUser);
 router.post(
   "/hackathon/createHackathon/:UserId",
   isSignedIn,
-  otpverification,
+  // otpverification,
   createNewHackathon
 );
 router.delete(

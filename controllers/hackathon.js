@@ -1,9 +1,6 @@
 const Hackathon = require("../models/hackathon");
 const User = require("../models/user");
 
-
-
-
 exports.getHackathonOfUser = (req, res) => {
   console.log("inside getHackathonOfUser");
   User.findById({ _id: req.profile._id })
@@ -62,17 +59,14 @@ exports.otpverification = (req, res, next) => {
 };
 
 exports.createNewHackathon = (req, res) => {
-  let hackathons = [];
   const hackathon = new Hackathon(req.body);
-  
-  console.log(hackathon);
-
   hackathon.save((err, hackathon) => {
     if (err) {
       res.status(500).json({
         error: err,
       });
     }
+    let hackathons = [];
 
     hackathons.push(hackathon);
 
@@ -95,7 +89,6 @@ exports.createNewHackathon = (req, res) => {
 
 exports.DeleteHackathon = (req, res) => {
   let hackathon = req.hackathon;
-  console.log(req.hackathon);
   hackathon.remove((err, deletedHackathon) => {
     if (err || !deletedHackathon) {
       res.status(400).json({

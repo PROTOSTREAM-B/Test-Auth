@@ -28,11 +28,11 @@ const schemeSchema = new mongoose.Schema(
       type: String,
     },
     fileLink: {
-      //required: true,
+      required: true,
       type: Object,
     },
     imageLink: {
-      //required: true,
+      required: true,
       type: Object,
     },
     user: {

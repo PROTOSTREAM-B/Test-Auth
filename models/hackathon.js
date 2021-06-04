@@ -2,37 +2,61 @@ const mongoose = require("mongoose");
 
 const hackathonSchema = new mongoose.Schema(
   {
-    currentYear: {
-      type: Number,
-      required: true,
-    },
-    hackName: {
-      required: true,
+    AddDescription: {
       type: String,
     },
-    teamName: {
-      required: true,
+    Email: {
       type: String,
     },
-    leaderName: {
-      required: true,
+    Branch: {
       type: String,
     },
-    leaderBranch: {
-      required: true,
+    MemberBranch: {
       type: String,
     },
-    projectSummary: {
-      required: true,
+    MemberBranch1: {
       type: String,
     },
-    leadereMailId: {
-      required: true,
+    MemberBranch2: {
       type: String,
     },
-    leaderMobile: {
-      required: true,
-      type: Number,
+    MemberEmail: {
+      type: String,
+    },
+    MemberEmail1: {
+      type: String,
+    },
+    MemberEmail2: {
+      type: String,
+    },
+    MemberName: {
+      type: String,
+    },
+    MemberName1: {
+      type: String,
+    },
+    MemberName2: {
+      type: String,
+    },
+    MemberRollNo: {
+      type: String,
+    },
+
+    MemberRollNo1: {
+      type: String,
+    },
+
+    MemberRollNo2: {
+      type: String,
+    },
+    RollNo: {
+      type: String,
+    },
+    TeamLeader: {
+      type: String,
+    },
+    TeamName: {
+      type: String,
     },
   },
 
