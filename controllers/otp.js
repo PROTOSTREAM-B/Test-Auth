@@ -45,22 +45,6 @@ exports.otplogin=(req,res) => {
             }
             console.log(data.status);
         });
-        // if(data.status==="pending"){
-        //     console.log(data.status);
-        //     User.findByIdAndUpdate(
-        //         { _id: req.profile._id },
-        //         { phonestatus: "pending" },
-        //         { upsert: true },
-        //         function(err, result) {
-        //           if (err) {
-        //             console.log(err);
-        //           } else {
-        //             console.log(result);
-        //             console.log(req.profile.phonestatus);
-        //           }
-        //         }
-        //       );
-        // }
     } else{
         res.status(404).send({ 
             message: "OTP already sent or you are already verified!!",

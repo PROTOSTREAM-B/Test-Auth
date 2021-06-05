@@ -11,6 +11,7 @@ const projectRoute = require("./routes/projectRoute");
 const hackRoute = require("./routes/hackathon");
 const innotechRoute = require("./routes/innotech");
 const schemeRoute = require("./routes/scheme");
+const resetpass = require("./routes/resetpass")
 const cors = require("cors");
 
 const app = express();
@@ -31,6 +32,7 @@ app.use(innotechRoute);
 app.use(schemeRoute);
 app.use(userRoute);
 app.use(otproute);
+app.use(resetpass);
 //! DataBase..
 mongoose.connect(process.env.MONGO_ATLAS || process.env.MONGODB_URL, {
   useNewUrlParser: true,

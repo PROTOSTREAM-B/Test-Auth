@@ -29,6 +29,16 @@ const userSchema = new mongoose.Schema(
       required: true,
       minlength: 3,
     },
+    // ableToResetPassword: {
+    //   type: Boolean,
+    //   default: false,
+    //   required: true
+    // },
+    otpstatus: {
+      type: String,
+      default: "notsent",
+      required: false,
+    },
     projects: [
       {
         type: ObjectId,
