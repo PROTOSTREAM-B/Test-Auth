@@ -103,10 +103,9 @@ exports.login = (req, res) => {
               { _id: foundUser._id },
               process.env.SECRET_KEY
             );
-            // console.log(typeof token);
-            res.cookie("hii", "hiiia");
-            console.log(req.cookies);
-            // res.cookie("token", token);
+
+            res.cookie("token", token);
+            console.log(res.headers);
 
             const {
               _id,
@@ -118,8 +117,6 @@ exports.login = (req, res) => {
               role,
               phonestatus,
             } = foundUser;
-            // console.log(res.headers);
-            // return res.send("sending response");
 
             return res.send({
               token,
@@ -135,19 +132,6 @@ exports.login = (req, res) => {
                 phonestatus,
               },
             });
-            // return res.status(200).json({
-            //   token,
-
-            //   user: {
-            //     _id,
-            //     projects,
-            //     hackathons,
-            //     email,
-            //     schemes,
-            //     profiledata,
-            //     role,
-            //   },
-            // });
           } else {
             return res.status(401).json({
               error: "Email or password do not match",
@@ -168,28 +152,12 @@ exports.logout = (req, res) => {
 
 // protected Routes..
 
-exports.isSignedIn = (req, res, next) => {
-  // console.log(req.headers);
-  // console.log(req.cookies);
-  // console.log(req.session);
-  next();
-};
+exports.isSignedIn = expressJwt({
+  secret: process.env.SECRET_KEY,
+  userProperty: "auth",
+});
 
-// exports.isSignedIn = (req,res,next)=>{
-//   const userProfile = JSON.parse(Buffer.from(req.headers.cookie.split('=')[1].split('.')[1], 'base64').toString('utf-8'));
-//   User.findOne({
-//       email : userProfile.userMail
-//   }).exec((err, user) => {
-//       if (user.role != 1) {
-//           return res.render('default/msg',{
-//               message:"Access denied!"
-//           });
-//       }
-//       else {
-//           next();
-//       }
-//   });
-// };
+
 
 exports.isAuthenticated = (req, res, next) => {
   console.log(req.profile);
