@@ -4,7 +4,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 var cookieParser = require("cookie-parser");
 const mongoose = require("mongoose");
-const otproute = require('./routes/otp');
+const otproute = require("./routes/otp");
 const authRoute = require("./routes/auth");
 const userRoute = require("./routes/user");
 const projectRoute = require("./routes/projectRoute");
@@ -15,13 +15,29 @@ const cors = require("cors");
 
 const app = express();
 
-app.use(express.static('${__dirname}/public'));
+app.use(express.static("${__dirname}/public"));
 app.use(express.json([]));
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cors());
+// app.use(bodyParser.urlencoded({ extended: true }));
+
+var corsOptions = {
+  origin: "http://localhost:3000",
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
+// app.use(cors(corsOptions));
 app.use(cookieParser());
 
-const client = require('twilio')(process.env.ACCOUNT_SID, process.env.AUTH_TOKEN);
+// app.use("/", );
+app.use((req, res, next) => {
+  console.log("inside setting headers");
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type,Authorization");
+  next();
+});
+const client = require("twilio")(
+  process.env.ACCOUNT_SID,
+  process.env.AUTH_TOKEN
+);
 
 //! Routes..
 app.use(authRoute);
@@ -37,8 +53,6 @@ mongoose.connect(process.env.MONGODB_URL, {
   useUnifiedTopology: true,
 });
 mongoose.set("useCreateIndex", true);
-
-
 
 app.listen(process.env.PORT, function () {
   console.log("Server is running on port " + process.env.PORT);

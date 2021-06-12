@@ -36,6 +36,7 @@ exports.register = (req, res) => {
           const newUser = new User({
             email: req.body.email,
             password: hash,
+            number: req.body.number,
             profiledata: profiledata,
           });
 
@@ -157,9 +158,8 @@ exports.isSignedIn = expressJwt({
   userProperty: "auth",
 });
 
-
-
 exports.isAuthenticated = (req, res, next) => {
+  console.log(req.headers);
   console.log(req.profile);
   console.log(req.auth);
   let checker = req.profile && req.auth && req.profile._id == req.auth._id;

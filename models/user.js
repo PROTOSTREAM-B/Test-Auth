@@ -4,17 +4,17 @@ const { ObjectId } = mongoose.Schema;
 
 const userSchema = new mongoose.Schema(
   {
-    phonestatus:{
+    phonestatus: {
       type: String,
       required: false,
       default: "Not-verify",
     },
-    sid:{
+    sid: {
       type: String,
       required: false,
       default: null,
     },
-    verification:{
+    verification: {
       type: Boolean,
       default: false,
       required: false,
@@ -70,6 +70,10 @@ const userSchema = new mongoose.Schema(
         ref: "Internship",
       },
     ],
+    number: {
+      type: Number,
+      required: true,
+    },
   },
   { timestamps: true }
 );
