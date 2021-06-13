@@ -3,44 +3,34 @@ const express = require("express");
 const { getUserById, getUser } = require("../controllers/user");
 const {
   isSignedIn,
-  isAdmin,
-  isTBI,
   isSens,
   isAuthenticated,
 } = require("../controllers/auth");
-const { createNewStartup } = require("../controllers/startup");
+const { createNewStartup, readytoRegister } = require("../controllers/startup");
+
+const {otplogin,otpverify}= require("../controllers/otp");
 
 const router = express.Router();
 
 router.param("userId", getUserById);
 router.param("startupId", getStartupById);
 
-router.post(
-  "/startup/PhoneLogin/:userId",
-  isSignedIn,
-  isSens,
-  PhoneLogin
-);
-
-router.post(
-  "/startup/:PhoneLoginNumber/PhoneVerify/:userId",
-  isSignedIn,
-  isSens,
-  PhoneVerify
-);
+//router.use("/startup/createStartup",isSens);
 
 
-router.post(
-  "/startup/createStartup/:userId",
-  isSignedIn,
-  isSens,
-  createNewStartup
-);
-router.get(
-  "/startup/allStartups",
-  isSignedIn,
-  isAuthenticated,
-  findAllStartups
-);
+
+router.get("/startup/:userId",isSignedIn,readytoRegister);
+router.post("/startup/register/:userId",isSignedIn,otplogin);
+router.post("/startup/verify/:userId",isSignedIn,otpverify);
+
+router.post("/startup/createStartup/NewStartup",isSignedIn,createNewStartup);
+
+
+// router.get(
+//   "/startup/allStartups",
+//   isSignedIn,
+//   isAuthenticated,
+//   findAllStartups
+// );
 
 module.exports = router;

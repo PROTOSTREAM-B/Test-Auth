@@ -3,6 +3,13 @@ const Startup = require("../models/startup");
 const User = require("../models/user");
 
 
+exports.readytoRegister = (req,res) => {
+  res.send({
+    profile: "Hello",
+  })
+}
+
+
 
 
 exports.createNewStartup = (req, res) => {

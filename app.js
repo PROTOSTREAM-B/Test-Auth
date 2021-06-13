@@ -4,14 +4,14 @@ const express = require("express");
 const bodyParser = require("body-parser");
 var cookieParser = require("cookie-parser");
 const mongoose = require("mongoose");
-const otproute = require('./routes/otp');
 const authRoute = require("./routes/auth");
 const userRoute = require("./routes/user");
 const projectRoute = require("./routes/projectRoute");
 const hackRoute = require("./routes/hackathon");
 const innotechRoute = require("./routes/innotech");
 const schemeRoute = require("./routes/scheme");
-const resetpass = require("./routes/resetpass")
+const resetpass = require("./routes/resetpass");
+const startup = require("./routes/startup");
 const cors = require("cors");
 
 const app = express();
@@ -31,8 +31,8 @@ app.use(hackRoute);
 app.use(innotechRoute);
 app.use(schemeRoute);
 app.use(userRoute);
-app.use(otproute);
 app.use(resetpass);
+app.use(startup);
 //! DataBase..
 mongoose.connect(process.env.MONGO_ATLAS || process.env.MONGODB_URL, {
   useNewUrlParser: true,
