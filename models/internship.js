@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const internshipSchema = new mongoose.SchemaType(
+const internshipSchema = new mongoose.Schema(
   {
     InternshipTitle: {
       type: String,
