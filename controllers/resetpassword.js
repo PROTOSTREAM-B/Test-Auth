@@ -30,7 +30,7 @@ exports.passLogin = (req,res) => {
                         error: err,
                     });
                     }else{
-                        client.verify.services(process.env.RESET_PASS_SERVICE_ID).verifications
+                    client.verify.services(process.env.RESET_PASS_SERVICE_ID).verifications
                     .create({
                         to: `+${user.number}`,
                         channel: 'sms'
@@ -63,7 +63,7 @@ exports.passLogin = (req,res) => {
 }
 
 
-exports.passVerify = (req,res,next) => {
+exports.passVerify = (req,res) => {
         
         if ((req.body.code).length === 6) {
             User.findOne({ email: req.body.email })
@@ -104,7 +104,6 @@ exports.passVerify = (req,res,next) => {
         } else {
             res.status(400).send({
                 message: "Wrong code:(",
-                phonenumber: req.body.phonenumber,
             })
         }
 }

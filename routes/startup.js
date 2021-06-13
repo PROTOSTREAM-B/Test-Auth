@@ -6,16 +6,14 @@ const {
   isSens,
   isAuthenticated,
 } = require("../controllers/auth");
-const { createNewStartup, readytoRegister, getStartupById } = require("../controllers/startup");
-
-const {otplogin,otpverify}= require("../controllers/otp");
+const { createNewStartup, readytoRegister, getStartupById, otplogin, otpverify } = require("../controllers/startup");
 
 const router = express.Router();
 
 router.param("userId", getUserById);
 router.param("startupId", getStartupById);
 
-//router.use("/startup/createStartup",isSens);
+router.use("/startup/createStartup",isSens);
 
 
 
