@@ -136,16 +136,16 @@ router.post(
       maxCount: 1,
     },
   ]),
-  isSignedIn,
-  isAuthenticated,
+  // isSignedIn,
+  // isAuthenticated,
   isTBI,
   createNewScheme
 );
 
 router.delete(
   "/schemes/:schemeId/:UserId",
-  isSignedIn,
-  isAuthenticated,
+  // isSignedIn,
+  // isAuthenticated,
   isAdmin,
   DeleteScheme
 );

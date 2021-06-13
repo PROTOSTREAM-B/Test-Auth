@@ -17,14 +17,14 @@ router.param("startupId", getStartupById);
 
 router.post(
   "/startup/PhoneLogin/:userId",
-  isSignedIn,
+  // isSignedIn,
   isSens,
   PhoneLogin
 );
 
 router.post(
   "/startup/:PhoneLoginNumber/PhoneVerify/:userId",
-  isSignedIn,
+  // isSignedIn,
   isSens,
   PhoneVerify
 );
@@ -32,14 +32,14 @@ router.post(
 
 router.post(
   "/startup/createStartup/:userId",
-  isSignedIn,
+  // isSignedIn,
   isSens,
   createNewStartup
 );
 router.get(
   "/startup/allStartups",
-  isSignedIn,
-  isAuthenticated,
+  // isSignedIn,
+  // isAuthenticated,
   findAllStartups
 );
 

@@ -30,8 +30,8 @@ router.post("/innotech/createInnotech/:UserId", isSignedIn, createNewInnotech);
 
 router.delete(
   "/innotech/:innotechId/:UserId",
-  isSignedIn,
-  isAuthenticated,
+  // isSignedIn,
+  // isAuthenticated,
   isAdmin,
   DeleteInnotech
 );

@@ -25,21 +25,25 @@ router.param("UserId", getUserById);
 
 router.get(
   "/hackathon/allHackathons",
-  isSignedIn,
-  isAuthenticated,
+  // isSignedIn,
+  // isAuthenticated,
   findAllHackathons
 );
-router.get("/hackathon/:UserId", isSignedIn, getHackathonOfUser);
+router.get(
+  "/hackathon/:UserId",
+  //  isSignedIn,
+  getHackathonOfUser
+);
 router.post(
   "/hackathon/createHackathon/:UserId",
-  isSignedIn,
+  // isSignedIn,
   otpverification,
   createNewHackathon
 );
 router.delete(
   "/hackathon/:hackathonId/:UserId",
-  isSignedIn,
-  isAuthenticated,
+  // isSignedIn,
+  // isAuthenticated,
   isAdmin,
   DeleteHackathon
 );
