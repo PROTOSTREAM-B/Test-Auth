@@ -6,7 +6,7 @@ const {
   isSens,
   isAuthenticated,
 } = require("../controllers/auth");
-const { createNewStartup, readytoRegister } = require("../controllers/startup");
+const { createNewStartup, readytoRegister, getStartupById } = require("../controllers/startup");
 
 const {otplogin,otpverify}= require("../controllers/otp");
 
