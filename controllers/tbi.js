@@ -33,6 +33,14 @@ exports.createNewHackathon = (req, res) => {
   });
 };
 
-exports.deleteAHackathon = (req,res) =>{
-    
-}
+exports.deleteAHackathon = (req, res) => {
+  const userId = req.profile._id;
+  User.findOneAndDelete({ _id: userId }).exec((err, updatedUser) => {
+    if (err || !updatedUser) {
+      return res.status(500).json({
+        error: err || "error",
+      });
+    }
+    res.status(200).json(updatedUser);
+  });
+};
