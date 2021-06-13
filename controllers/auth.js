@@ -10,7 +10,6 @@ const saltRounds = 10;
 var _ = require("lodash");
 
 exports.register = (req, res) => {
-  console.log("inside register");
 
   let regx = /^([a-z]+)(\.)([0-9]{4})([a-z]{2})([0-9]{4})(@)(kiet)(\.)(edu)$/;
   if (regx.test(req.body.email)) {
@@ -28,7 +27,6 @@ exports.register = (req, res) => {
     };
 
     User.findOne({ email: req.body.email }, function (err, foundUser) {
-      // console.log("[Found User]",foundUser);
       if (foundUser) {
         return res.json({ error: "Email already registered" });
       } else {
@@ -41,7 +39,6 @@ exports.register = (req, res) => {
           });
 
           newUser.save(function (err, savedUser) {
-            // console.log("[SavedUser]",savedUser);
             if (!err) {
               const token = jwt.sign(
                 { _id: newUser._id },
