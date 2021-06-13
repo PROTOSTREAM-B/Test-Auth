@@ -21,68 +21,89 @@ exports.isEmailRegister = (req,res,next) => {
 }
 
 exports.passLogin = (req,res) => {
-        if (req.body.phonenumber) {
-            client.verify.services(process.env.RESET_PASS_SERVICE_ID).verifications
-            .create({
-                to: `+${req.body.phonenumber}`,
-                channel: 'sms'
-            })
-            .then(data => {
-                if(data.status==="pending"){
-                    res.status(200).send({data});
-                }
-                User.findOneAndUpdate(
-                    { _id: req.profile._id },
-                    { otpstatus: "sent" },
-                    { new: true },
-                    function(err, result) {
-                      if (err) {
-                        console.log(err);
-                      } else {
-                        console.log(result);
-                      }
+            console.log(req.body.email);
+            if (req.body.email) {
+                User.findOne({ email: req.body.email })
+                .exec((err, user) => {
+                    if (err) {
+                    return res.status(400).json({
+                        error: err,
+                    });
+                    }else{
+                        client.verify.services(process.env.RESET_PASS_SERVICE_ID).verifications
+                    .create({
+                        to: `+${user.number}`,
+                        channel: 'sms'
+                    })
+                    .then(data => {
+                        if(data.status==="pending"){
+                            res.status(200).send({data});
+                        }
+                        User.findOneAndUpdate(
+                            { _id: req.profile._id },
+                            { otpstatus: "sent" },
+                            { new: true },
+                            function(err, result) {
+                            if (err) {
+                                console.log(err);
+                            } else {
+                                console.log(result);
+                            }
+                            }
+                        );
+                    });   
                     }
-                  );
-            });
-         } else {
-            res.status(400).send({
-                message: "Wrong phone number :(",
-                phonenumber: req.body.phonenumber,
-            });
-        }
+                    
+                });
+            } else {
+                res.status(400).send({
+                    message: "Wrong email :(",
+                });
+            }
 }
 
 
 exports.passVerify = (req,res,next) => {
-        if (req.body.phonenumber && (req.body.code).length === 6) {
-            client.verify.services(process.env.RESET_PASS_SERVICE_ID).verificationChecks
-            .create({
-                to: `+${req.body.phonenumber}`,
-                code: req.body.code
-            })
-            .then(data => {
-                if (data.status === "approved") { 
-                    res.status(200).send({data});
-                    User.findOneAndUpdate(
-                        { _id: req.profile._id },
-                        { otpstatus: "notsent" },
-                        function(err, result) {
-                            if (err) {
-                                console.log(err);
-                              } else {
-                                console.log(result);
-                              }
-                        }
-                    );
-                }else{
-                    res.status(400).send({
-                        err: "wrong code",
-                    })
-                }
+        
+        if ((req.body.code).length === 6) {
+            User.findOne({ email: req.body.email })
+            .exec((err, user) => {
+                if (err) {
+                return res.status(400).json({
+                    error: err,
                 });
+                }   
+                else{
+                    client.verify.services(process.env.RESET_PASS_SERVICE_ID).verificationChecks
+                .create({
+                    to: `+${user.number}`,
+                    code: req.body.code
+                })
+                .then(data => {
+                    if (data.status === "approved") { 
+                        res.status(200).send({data});
+                        User.findOneAndUpdate(
+                            { _id: req.profile._id },
+                            { otpstatus: "notsent" },
+                            function(err, result) {
+                                if (err) {
+                                    console.log(err);
+                                } else {
+                                    console.log(result);
+                                }
+                            }
+                        );
+                    }else{
+                        res.status(400).send({
+                            err: "wrong code",
+                        })
+                    }
+                    });
+                }
+            });    
         } else {
             res.status(400).send({
-                message: "Wrong phone number or code:(",
+                message: "Wrong code:(",
                 phonenumber: req.body.phonenumber,
             })
         }

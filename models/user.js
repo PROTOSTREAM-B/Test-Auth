@@ -48,7 +48,7 @@ const userSchema = new mongoose.Schema(
     profiledata: {},
     role: {
       type: Number,
-      default: 0,
+      required: true,
     },
     hackathons: [
       {
@@ -80,8 +80,13 @@ const userSchema = new mongoose.Schema(
         ref: "Internship",
       },
     ],
+    number: {
+      type: Number,
+      required: true,
+    },
   },
-  { timestamps: true }
+  
+  { timestamps: true },
 );
 
 module.exports = new mongoose.model("User", userSchema);
