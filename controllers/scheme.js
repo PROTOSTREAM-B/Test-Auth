@@ -54,9 +54,9 @@ exports.createNewScheme = (req, res) => {
     fileLink: final_file,
     imageLink: final_img,
   });
-  const schemeId = scheme._id;
-  const user = req.profile;
-  scheme.user = user;
+  // const schemeId = scheme._id;
+  // const user = req.profile;
+  // scheme.user = user;
   scheme.save((err, scheme) => {
     if (err) {
       res.json({

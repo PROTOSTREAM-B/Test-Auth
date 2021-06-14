@@ -297,6 +297,7 @@ exports.isTBI = (req, res, next) => {
 };
 
 exports.isSens = (req, res, next) => {
+  console.log(req.profile);
   if (req.profile.role === 1) {
     next();
   } else {

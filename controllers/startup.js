@@ -2,6 +2,7 @@ require('dotenv/config');
 const Internship = require("../models/internship");
 const Startup = require("../models/startup");
 const User = require("../models/user");
+const fs = require("fs");
 const client = require('twilio')(process.env.ACCOUNT_SID, process.env.AUTH_TOKEN);
 
 exports.readytoRegister = (req,res) => {
@@ -10,6 +11,18 @@ exports.readytoRegister = (req,res) => {
     number: req.profile.number,
   })
 }
+
+
+exports.isSens = (req, res, next) => {
+  console.log(req.profile);
+  if (req.profile.role === 1) {
+    next();
+  } else {
+    return res.json({
+      error: "Access Denied",
+    });
+  }
+};
 
 
 exports.otplogin = (req,res) => {
@@ -96,9 +109,39 @@ if ((req.body.code).length === 6) {
 
 exports.createNewStartup = (req, res) => {
 
+
  // console.log(req.profile.PhoneVerfication);
   if(req.profile.phonestatus==="approved"){
-  const startup = new Startup(req.body);
+    let signedNda = fs.readFileSync(req.files.nda[0].path);
+    let presentationFile = fs.readFileSync(req.files.presentation[0].path);
+    let encode_signedNda = signedNda.toString("base64");
+    let encode_presentationFile = presentationFile.toString("base64");
+    let final_signedNda = {
+      contentType: req.files.nda[0].mimetype,
+      image: Buffer.from(encode_signedNda, "base64"),
+    };
+    let final_presentationFile = {
+      contentType: req.files.presentation[0].mimetype,
+      file: Buffer.from(encode_presentationFile, "base64"),
+    };
+    const {StartupName, StartupDomain, StartupStage, StartupType, FounderName, FounderEmail, AadharNumber, StartupBreif, CofounderName, CofounderEmail, CofounderNumber, Link, ProjectSummary}=req.body;
+    const startup = new Startup({
+      StartupName,
+      StartupDomain,
+      StartupStage,
+      StartupType,
+      FounderName,
+      FounderEmail,
+      AadharNumber,
+      StartupBreif,
+      CofounderName,
+      CofounderEmail,
+      CofounderNumber,
+      Link,
+      ProjectSummary,
+      SignedNda:final_signedNda,
+      PresentationFile:final_presentationFile,
+    });
   startup.save((err, startup) => {
     if (err) {
       res.status(500).json({
@@ -115,10 +158,20 @@ exports.createNewStartup = (req, res) => {
             error: "Unable to save hackathon",
           });
         }
+        else{
+          res.status(200).json(startup);
+        }
       }
-    );
+    ); 
+  });
+}
+else{
+  res.status(400).json({error:"You have not proper register your phone no. for Startup!!"});
+}
+};
 
-    const internship = new Internship(req.body);
+exports.internship = (req,res) => {
+  const internship = new Internship(req.body);
     internship.save((err, Internship) => {
       if (err) {
         res.status(500).json({
@@ -139,13 +192,8 @@ exports.createNewStartup = (req, res) => {
       );
     });
 
-    res.status(200).json(startup);
-  });
-}
-else{
-  res.status(400).json({error:"You have not proper register your phone no. for Startup!!"});
-}
 };
+
 
 exports.getStartupById = (req, res) => {
   User.findById({ _id: req.profile._id })

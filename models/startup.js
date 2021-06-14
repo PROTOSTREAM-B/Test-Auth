@@ -1,8 +1,14 @@
 const mongoose = require("mongoose");
+const { ObjectId } = mongoose.Schema;
+
 
 const startupSchema = new mongoose.Schema(
   {
-
+    VerifyByTBI: {
+      type: Boolean,
+      default: false,
+      required: true,
+    },
     StartupName: {
       type: String,
       required: true,
@@ -48,7 +54,7 @@ const startupSchema = new mongoose.Schema(
       required: true,
     },
     SignedNda: {
-      type: Buffer,
+      type: Object,
       required: true,
     },
     Link: {
@@ -56,11 +62,15 @@ const startupSchema = new mongoose.Schema(
     },
     ProjectSummary: {
       type: String,
-      minlength: 500,
+      //minlength: 500,
     },
     PresentationFile: {
-      type: Buffer,
+      type: Object,
       required: true,
+    },
+    user: {
+      type: ObjectId,
+      ref: "User",
     },
   },
   { timestamps: true }
