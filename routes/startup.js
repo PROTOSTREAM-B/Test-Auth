@@ -97,6 +97,51 @@ const multerStorage = multer.diskStorage({
           }
         });
       }
+      else if(file.fieldname==="uploadnda"){
+        fs.access("public", function(error) {
+          if (error) {
+            console.log("Public Directory does not exist.")
+            fs.mkdir('./public/',(err)=>{
+              if(err) {
+                return console.log(err);
+              }
+              else{
+                console.log("Public Directory created.");
+                let dir= './public';
+                fs.mkdir(dir + '/uploadnda/', (err)=> {
+                  if (err){
+                    return console.error(err);
+                  } else{
+                    console.log("uploadnda Directory created.");
+                    cb(null, "public/uploadnda");
+                  }
+                });
+              }
+            });
+          } 
+          else {
+            console.log("Public Directory exists.")
+            fs.access('public/uploadnda', function(error) {
+                  if(error) {
+                    console.log("uploadnda Directory does not exist!!");
+                    fs.mkdir('./public/uploadnda',(err)=>{
+                      if(err) {
+                        return console.log(err);
+                      }
+                      else{
+                        console.log("uploadnda directory created.");
+                        cb(null, "public/uploadnda");
+                      }
+                    });
+                  }
+                  else{
+                    console.log("uploadnda Directory exists!!");
+                    cb(null, "public/uploadnda");
+                  }
+              });
+          }
+        });
+      }
   },
   filename: (req, file, cb) => {
       if(file.fieldname==="nda"){
@@ -105,8 +150,12 @@ const multerStorage = multer.diskStorage({
       else if(file.fieldname==="presentation"){
           cb(null, file.fieldname + '-' + Date.now() + file.originalname);
       }
+      else if(file.fieldname==="uploadnda"){
+        cb(null, file.fieldname + '-' + Date.now() + file.originalname);
+    }
   },
 });
+
 
 const upload = multer({storage: multerStorage});
 
@@ -115,7 +164,9 @@ const {
   isSignedIn,
   isAuthenticated,
 } = require("../controllers/auth");
-const { createNewStartup, readytoRegister, getStartupById, otplogin, otpverify, isSens, internship } = require("../controllers/startup");
+const { createNewStartup, readytoRegister, getStartupById, otplogin, otpverify, isSens, ndaUpload, internship } = require("../controllers/startup");
+
+const {createNewInternship} = require("../controllers/internship");
 
 const router = express.Router();
 
@@ -130,8 +181,13 @@ router.use("/startup/createinternship/",isSens);
 router.get("/startup/:userId",isSignedIn,readytoRegister);
 router.post("/startup/register/:userId",isSignedIn,otplogin);
 router.post("/startup/verify/:userId",isSignedIn,otpverify);
+router.post("/startup/nda/upload/:userId",upload.single('uploadnda'),isSignedIn,ndaUpload);
 
-router.post("/startup/createstartup/:userId",upload.fields(
+
+
+//REGISTER ROUTES
+
+router.post("register/createstartup/:userId",upload.fields(
             [{
               name: 'nda', maxCount: 1
             }, {
@@ -141,6 +197,8 @@ router.post("/startup/createstartup/:userId",upload.fields(
             isSignedIn,
             createNewStartup,
 );
+
+router.post("register/internship/:startupId/:userId",isSens,createNewInternship);
 
 
 // router.get(

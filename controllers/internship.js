@@ -1,7 +1,7 @@
 const internship = require("../models/internship");
 const Internship = require("../models/internship");
 
-exports.createInternship = (req, res) => {
+exports.createNewInternship = (req, res) => {
   const internship = new Internship(req.body);
   internship.save((err, Internship) => {
     if (err) {

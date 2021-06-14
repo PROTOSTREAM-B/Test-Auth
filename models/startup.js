@@ -4,11 +4,6 @@ const { ObjectId } = mongoose.Schema;
 
 const startupSchema = new mongoose.Schema(
   {
-    VerifyByTBI: {
-      type: Boolean,
-      default: false,
-      required: true,
-    },
     StartupName: {
       type: String,
       required: true,

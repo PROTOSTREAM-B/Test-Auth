@@ -80,6 +80,12 @@ const userSchema = new mongoose.Schema(
         ref: "Internship",
       },
     ],
+    nda: [
+      {
+        type: ObjectId,
+        ref: "Nda",
+      }
+    ],
     number: {
       type: Number,
       required: true,

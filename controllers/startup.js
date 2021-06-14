@@ -2,6 +2,7 @@ require('dotenv/config');
 const Internship = require("../models/internship");
 const Startup = require("../models/startup");
 const User = require("../models/user");
+const Nda = require("../models/nda")
 const fs = require("fs");
 const client = require('twilio')(process.env.ACCOUNT_SID, process.env.AUTH_TOKEN);
 
@@ -14,7 +15,7 @@ exports.readytoRegister = (req,res) => {
 
 
 exports.isSens = (req, res, next) => {
-  console.log(req.profile);
+  //console.log(req.profile);
   if (req.profile.role === 1) {
     next();
   } else {
@@ -106,6 +107,44 @@ if ((req.body.code).length === 6) {
 
 
 
+exports.ndaUpload = (req,res) => {
+  let uploadNda = fs.readFileSync(req.file.path);
+  let encode_uploadNda = uploadNda.toString("base64");
+  let final_uploadNda = {
+    contentType: req.file.mimetype,
+    file: Buffer.from(encode_uploadNda, "base64")
+  };
+  const {StartupName}=req.body;
+  const nda = new Nda({
+    StartupName,
+    Nda:final_uploadNda,
+  });
+  nda.save((err, nda)=>{
+    if (err) {
+      res.status(500).json({
+        error: err,
+      });
+    }
+    User.findOneAndUpdate(
+      { _id: req.profile._id },
+      { $push: { ndas: nda } },
+      { new: true },
+      (err, updatedUser) => {
+        if (err) {
+          return res.status(400).json({
+            error: "Unable to save hackathon",
+          });
+        }
+        else{
+          res.status(200).json(nda);
+        }
+      }
+    ); 
+  });
+}
+
+
+
 
 exports.createNewStartup = (req, res) => {
 
@@ -118,7 +157,7 @@ exports.createNewStartup = (req, res) => {
     let encode_presentationFile = presentationFile.toString("base64");
     let final_signedNda = {
       contentType: req.files.nda[0].mimetype,
-      image: Buffer.from(encode_signedNda, "base64"),
+      file: Buffer.from(encode_signedNda, "base64"),
     };
     let final_presentationFile = {
       contentType: req.files.presentation[0].mimetype,

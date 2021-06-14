@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { ObjectId } = mongoose.Schema;
 
 const internshipSchema = new mongoose.Schema(
   {
@@ -20,7 +21,16 @@ const internshipSchema = new mongoose.Schema(
     Link: {
       type: String,
     },
+    user: {
+      type: ObjectId,
+      ref: "User",
+    },
+    startup:{
+      type: ObjectId,
+      ref: "Startup"
+    }
   },
+  
   { timestamps: true }
 );
 
