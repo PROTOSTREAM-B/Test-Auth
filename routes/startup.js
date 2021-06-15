@@ -198,8 +198,8 @@ router.post("/createstartup/:ndaId/:userId",upload.fields(
             isNdaVerify,
             isSignedIn,
             createNewStartup,
-);
-router.post("/register/internship/:startupId/:userId",isSignedIn,isSens,createNewInternship);
+);                                                          // 2ND TEST REMAINS WITH isNdaVerify and :ndaId
+router.post("/register/internship/:startupId/:userId",isSignedIn,isSens,createNewInternship);     //NOT TESTED
 
 router.post("/myndas/:userId",isSignedIn,isSens,findAllUserNdas);       //NOT TESTED
 
