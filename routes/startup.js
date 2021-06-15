@@ -163,8 +163,9 @@ const { getUserById, getUser } = require("../controllers/user");
 const {
   isSignedIn,
   isAuthenticated,
+  isTBI,
 } = require("../controllers/auth");
-const { createNewStartup, readytoRegister, getStartupById, otplogin, otpverify, isSens, ndaUpload, internship } = require("../controllers/startup");
+const { createNewStartup, readytoRegister, getStartupById, otplogin, otpverify, isSens, ndaUpload, findAllUserNdas, findAllNdas, getNda, getNdaById, verifyNda, isNdaVerify, internship } = require("../controllers/startup");
 
 const {createNewInternship} = require("../controllers/internship");
 
@@ -172,12 +173,12 @@ const router = express.Router();
 
 router.param("userId", getUserById);
 router.param("startupId", getStartupById);
+router.param("ndaId", getNdaById);
 
-//router.use("/createstartup",isSens);
 router.use("/startup/createinternship/",isSens);
 
 
-
+// SENS ROUTES
 router.get("/startup/:userId",isSignedIn,readytoRegister);
 router.post("/startup/register/:userId",isSignedIn,otplogin);
 router.post("/startup/verify/:userId",isSignedIn,otpverify);
@@ -185,27 +186,29 @@ router.post("/startup/nda/upload/:userId",upload.single('uploadnda'),isSignedIn,
 
 
 
-//REGISTER ROUTES
 
-router.post("register/createstartup/:userId",upload.fields(
+//REGISTER ROUTES
+router.post("/createstartup/:ndaId/:userId",upload.fields(
             [{
               name: 'nda', maxCount: 1
             }, {
               name: 'presentation', maxCount: 1
             }]
             ),isSens,
+            isNdaVerify,
             isSignedIn,
             createNewStartup,
 );
+router.post("/register/internship/:startupId/:userId",isSignedIn,isSens,createNewInternship);
 
-router.post("register/internship/:startupId/:userId",isSens,createNewInternship);
+router.post("/myndas/:userId",isSignedIn,isSens,findAllUserNdas);       //NOT TESTED
 
 
-// router.get(
-//   "/startup/allStartups",
-//   isSignedIn,
-//   isAuthenticated,
-//   findAllStartups
-// );
+//TBI ROUTES
+router.post("/ndalist/:userId",isSignedIn,isTBI,findAllNdas);         //NOT TESTED
+router.post("/nda/:ndaId/:userId",isSignedIn,isTBI,getNda);   //NOT TESTED
+router.patch("/verifynda/:ndaId/:userId",isSignedIn,isTBI,verifyNda);   //NOT TESTED
+
+
 
 module.exports = router;

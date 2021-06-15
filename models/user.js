@@ -80,11 +80,11 @@ const userSchema = new mongoose.Schema(
         ref: "Internship",
       },
     ],
-    nda: [
+    ndas: [
       {
         type: ObjectId,
         ref: "Nda",
-      }
+      },
     ],
     number: {
       type: Number,

@@ -2,7 +2,7 @@ require('dotenv/config');
 const Internship = require("../models/internship");
 const Startup = require("../models/startup");
 const User = require("../models/user");
-const Nda = require("../models/nda")
+const Nda = require("../models/nda");
 const fs = require("fs");
 const client = require('twilio')(process.env.ACCOUNT_SID, process.env.AUTH_TOKEN);
 
@@ -10,6 +10,7 @@ exports.readytoRegister = (req,res) => {
   res.send({
     name: req.profile.profiledata.Profilename,
     number: req.profile.number,
+    status: req.profile.phonestatus,
   })
 }
 
@@ -107,6 +108,8 @@ if ((req.body.code).length === 6) {
 
 
 
+
+
 exports.ndaUpload = (req,res) => {
   let uploadNda = fs.readFileSync(req.file.path);
   let encode_uploadNda = uploadNda.toString("base64");
@@ -127,9 +130,9 @@ exports.ndaUpload = (req,res) => {
     }
     User.findOneAndUpdate(
       { _id: req.profile._id },
-      { $push: { ndas: nda } },
+      { $push: { ndas : nda } },
       { new: true },
-      (err, updatedUser) => {
+      (err, nda) => {
         if (err) {
           return res.status(400).json({
             error: "Unable to save hackathon",
@@ -143,6 +146,79 @@ exports.ndaUpload = (req,res) => {
   });
 }
 
+exports.getNdaById = (req, res, next, id) => {
+  // console.log("in getUserById");
+  Nda.findById(id).exec((err, nda) => {
+    if (err || !nda) {
+      return res.status(400).json({
+        error: "No nda was found in DB",
+      });
+    }
+    req.nda = nda;
+    next();
+  });
+};
+
+exports.getNda = (req, res) => {
+  return res.json(req.nda);
+};
+
+
+exports.findAllNdas = (req, res) => {
+  Nda.find().exec((err, nda) => {
+    if (err || !nda) {
+      res.status(500).json({
+        error: err,
+      });
+    }
+    res.status(200).json(nda);
+  });
+};
+
+exports.findAllUserNdas = (req,res) =>{
+  User.findById({_id: req.profile._id })
+      .populate("ndas")
+      .exec((err,user)=>{
+        if (err) {
+          return res.status(400).json({
+            error: err,
+          });
+        }
+        return res.status(200).json(user.ndas);
+  });
+}
+
+
+exports.verifyNda = (req,res) => {
+  Nda.findOneAndUpdate(
+    {_id : req.nda._id},
+    {VerifyByTbi : true},
+    function(err, result) {
+      if (err) {
+          console.log(err);
+        } else {
+          console.log(result);
+          res.status(200).send({
+              msg:"Nda Verified",
+          })
+        }
+  }
+    )
+}
+
+
+exports.isNdaVerify = (req,res,next) =>{
+  Nda.findOne( {_id:req.nda._id}, function (err,foundnda) {
+    if (foundnda.VerifyByTbi) { 
+        next();
+     } else {
+         return res.json({
+             msg: "Nda not Verified",
+             status: false,
+         });
+     }
+});
+}
 
 
 
@@ -232,6 +308,9 @@ exports.internship = (req,res) => {
     });
 
 };
+
+
+
 
 
 exports.getStartupById = (req, res) => {
