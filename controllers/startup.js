@@ -29,7 +29,7 @@ exports.isSens = (req, res, next) => {
 };
 
 exports.otplogin = (req, res) => {
-  //console.log(req.profile.number);
+  console.log(req.profile.number);
   console.log("inside otp login");
   // console.log(req.profile);
   // console.log(req.profile.number);
