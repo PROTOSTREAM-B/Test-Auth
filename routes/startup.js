@@ -188,13 +188,14 @@ router.post("/startup/nda/upload/:userId",upload.single('uploadnda'),isSignedIn,
 
 
 //REGISTER ROUTES
-router.post("/createstartup/:userId",upload.fields(
+router.post("/createstartup/:ndaId/:userId",upload.fields(
             [{
               name: 'nda', maxCount: 1
             }, {
               name: 'presentation', maxCount: 1
             }]
             ),isSens,
+            isNdaVerify,
             isSignedIn,
             createNewStartup,
 );                                                          // 2ND TEST REMAINS WITH isNdaVerify and :ndaId
