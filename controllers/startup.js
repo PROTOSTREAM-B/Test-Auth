@@ -31,8 +31,9 @@ exports.isSens = (req, res, next) => {
 exports.otplogin = (req, res) => {
   //console.log(req.profile.number);
   console.log("inside otp login");
-  console.log(req.profile.number);
-  console.log(process.env.RESET_PASS_SERVICE_ID);
+  // console.log(req.profile);
+  // console.log(req.profile.number);
+  // console.log(process.env.RESET_PASS_SERVICE_ID);
   if (req.profile.number) {
     client.verify
       .services(process.env.RESET_PASS_SERVICE_ID)
@@ -52,7 +53,7 @@ exports.otplogin = (req, res) => {
             if (err) {
               console.log(err);
             } else {
-              console.log(result);
+              // console.log(result);
             }
           }
         );
@@ -65,8 +66,13 @@ exports.otplogin = (req, res) => {
 };
 
 exports.otpverify = (req, res) => {
+  // console.log("inside otpverify")
+  // console.log(req.body.code);
+
   if (req.body.code.length === 6) {
-    User.findOne({ email: req.body.email }).exec((err, user) => {
+    console.log("inside this");
+    User.findOne({ email: req.profile.email }).exec((err, user) => {
+      // console.log(user);
       if (err) {
         return res.status(400).json({
           error: err,
@@ -79,25 +85,20 @@ exports.otpverify = (req, res) => {
             code: req.body.code,
           })
           .then((data) => {
-            if (data.status === "approved") {
+            const status = data.status;
+            console.log(status);
+            if (status=== "approved") {
               res.status(200).send({ data });
+              console.log("after sending..");
               User.findOneAndUpdate(
                 { _id: req.profile._id },
-                { phonestatus: data.status, role: 1 },
-                function (err, result) {
-                  if (err) {
-                    console.log(err);
-                  } else {
-                    console.log(result);
-                  }
-                }
-              );
+                { phonestatus: status })
             } else {
               res.status(400).send({
                 err: "wrong code",
               });
             }
-          });
+          }).catch(err =>console.log(err));
       }
     });
   } else {

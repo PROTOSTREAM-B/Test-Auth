@@ -204,6 +204,8 @@ exports.login = (req, res) => {
             // console.log(res.headers);
             // return res.send("sending response");
 
+            // req.profile = foundUser;
+
             return res.send({
               token,
               cookies: res.cookies,
