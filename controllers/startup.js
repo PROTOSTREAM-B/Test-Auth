@@ -66,13 +66,10 @@ exports.otplogin = (req, res) => {
 };
 
 exports.otpverify = (req, res) => {
-  // console.log("inside otpverify")
-  // console.log(req.body.code);
 
   if (req.body.code.length === 6) {
     console.log("inside this");
     User.findOne({ email: req.profile.email }).exec((err, user) => {
-      // console.log(user);
       if (err) {
         return res.status(400).json({
           error: err,
@@ -109,7 +106,6 @@ exports.otpverify = (req, res) => {
 };
 
 exports.ndaUpload = (req,res) => {
-  console.log(req.file);
   let uploadNda = fs.readFileSync(req.file.path);
   let encode_uploadNda = uploadNda.toString("base64");
   let final_uploadNda = {
@@ -118,6 +114,7 @@ exports.ndaUpload = (req,res) => {
     file: Buffer.from(encode_uploadNda, "base64"),
   };
   const { StartupName } = req.body;
+
   const nda = new Nda({
     StartupName,
     Nda: final_uploadNda,
@@ -128,6 +125,7 @@ exports.ndaUpload = (req,res) => {
         error: err,
       });
     }
+
     User.findOneAndUpdate(
       { _id: req.profile._id },
       { $push: { ndas: nda } },
@@ -138,7 +136,7 @@ exports.ndaUpload = (req,res) => {
             error: "Unable to save hackathon",
           });
         } else {
-          res.status(200).json(nda);
+          return res.status(200).json(nda);
         }
       }
     );

@@ -11,6 +11,8 @@ var _ = require("lodash");
 const { VideoGrant } = require("twilio/lib/jwt/AccessToken");
 
 exports.register = (req, res) => {
+  console.log("inside register");
+  console.log(req.body);
   emails=[
     "vineet.sharma@kiet.edu","hod.verma@kiet.edu"
   ]
