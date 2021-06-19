@@ -32,6 +32,7 @@ exports.otplogin = (req, res) => {
   //console.log(req.profile.number);
   console.log("inside otp login");
   console.log(req.profile.number);
+  console.log(process.env.RESET_PASS_SERVICE_ID);
   if (req.profile.number) {
     client.verify
       .services(process.env.RESET_PASS_SERVICE_ID)
