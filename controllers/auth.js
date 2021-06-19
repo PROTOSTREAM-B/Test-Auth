@@ -247,21 +247,6 @@ exports.isSignedIn = (req, res, next) => {
   next();
 };
 
-// exports.isSignedIn = (req,res,next)=>{
-//   const userProfile = JSON.parse(Buffer.from(req.headers.cookie.split('=')[1].split('.')[1], 'base64').toString('utf-8'));
-//   User.findOne({
-//       email : userProfile.userMail
-//   }).exec((err, user) => {
-//       if (user.role != 1) {
-//           return res.render('default/msg',{
-//               message:"Access denied!"
-//           });
-//       }
-//       else {
-//           next();
-//       }
-//   });
-// };
 
 exports.isAuthenticated = (req, res, next) => {
   console.log(req.profile);

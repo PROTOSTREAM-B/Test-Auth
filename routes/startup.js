@@ -180,7 +180,7 @@ router.use("/startup/createinternship/",isSens);
 
 // SENS ROUTES
 router.get("/startup/:userId",isSignedIn,readytoRegister);
-router.post("/startup/register/:userId",isSignedIn,otplogin);
+router.get("/startup/register/:userId",isSignedIn,otplogin);
 router.post("/startup/verify/:userId",isSignedIn,otpverify);
 router.post("/startup/nda/upload/:userId",upload.single('uploadnda'),isSignedIn,ndaUpload);
 

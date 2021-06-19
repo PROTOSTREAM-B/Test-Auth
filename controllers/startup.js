@@ -1,19 +1,21 @@
-require('dotenv/config');
+require("dotenv/config");
 const Internship = require("../models/internship");
 const Startup = require("../models/startup");
 const User = require("../models/user");
 const Nda = require("../models/nda");
 const fs = require("fs");
-const client = require('twilio')(process.env.ACCOUNT_SID, process.env.AUTH_TOKEN);
+const client = require("twilio")(
+  process.env.ACCOUNT_SID,
+  process.env.AUTH_TOKEN
+);
 
-exports.readytoRegister = (req,res) => {
+exports.readytoRegister = (req, res) => {
   res.send({
     name: req.profile.profiledata.Profilename,
     number: req.profile.number,
     status: req.profile.phonestatus,
-  })
-}
-
+  });
+};
 
 exports.isSens = (req, res, next) => {
   //console.log(req.profile);
@@ -26,103 +28,97 @@ exports.isSens = (req, res, next) => {
   }
 };
 
-
-exports.otplogin = (req,res) => {
+exports.otplogin = (req, res) => {
   //console.log(req.profile.number);
+  console.log("inside otp login");
+  console.log(req.profile.number);
   if (req.profile.number) {
-          client.verify.services(process.env.RESET_PASS_SERVICE_ID).verifications
-          .create({
-              to: `+${req.profile.number}`,
-              channel: 'sms'
-          })
-          .then(data => {
-              if(data.status==="pending"){
-                  res.status(200).send({data});
-              }
-              User.findOneAndUpdate(
-                  { _id: req.profile._id },
-                  { phonestatus: data.status},
-                  { new: true },
-                  function(err, result) {
-                  if (err) {
-                      console.log(err);
-                  } else {
-                      console.log(result);
-                  }
-                  }
-              );
-          });   
-  }
-   else {
-      res.status(400).send({
-          message: "Wrong number :(",
-      });
-  }
-}
-
-
-exports.otpverify = (req,res) => {
-
-if ((req.body.code).length === 6) {
-  User.findOne({ email: req.body.email })
-  .exec((err, user) => {
-      if (err) {
-      return res.status(400).json({
-          error: err,
-      });
-      }   
-      else{
-          client.verify.services(process.env.RESET_PASS_SERVICE_ID).verificationChecks
-      .create({
-          to: `+${req.profile.number}`,
-          code: req.body.code
+    client.verify
+      .services(process.env.RESET_PASS_SERVICE_ID)
+      .verifications.create({
+        to: `+${req.profile.number}`,
+        channel: "sms",
       })
-      .then(data => {
-          if (data.status === "approved") { 
-              res.status(200).send({data});
-              User.findOneAndUpdate(
-                  { _id: req.profile._id },
-                  { phonestatus: data.status , role: 1},
-                  function(err, result) {
-                      if (err) {
-                          console.log(err);
-                      } else {
-                          console.log(result);
-                      }
-                  }
-              );
-          }else{
-              res.status(400).send({
-                  err: "wrong code",
-              })
+      .then((data) => {
+        if (data.status === "pending") {
+          res.status(200).send({ data });
+        }
+        User.findOneAndUpdate(
+          { _id: req.profile._id },
+          { phonestatus: data.status },
+          { new: true },
+          function (err, result) {
+            if (err) {
+              console.log(err);
+            } else {
+              console.log(result);
+            }
           }
+        );
+      });
+  } else {
+    res.status(400).send({
+      message: "Wrong number :(",
+    });
+  }
+};
+
+exports.otpverify = (req, res) => {
+  if (req.body.code.length === 6) {
+    User.findOne({ email: req.body.email }).exec((err, user) => {
+      if (err) {
+        return res.status(400).json({
+          error: err,
+        });
+      } else {
+        client.verify
+          .services(process.env.RESET_PASS_SERVICE_ID)
+          .verificationChecks.create({
+            to: `+${req.profile.number}`,
+            code: req.body.code,
+          })
+          .then((data) => {
+            if (data.status === "approved") {
+              res.status(200).send({ data });
+              User.findOneAndUpdate(
+                { _id: req.profile._id },
+                { phonestatus: data.status, role: 1 },
+                function (err, result) {
+                  if (err) {
+                    console.log(err);
+                  } else {
+                    console.log(result);
+                  }
+                }
+              );
+            } else {
+              res.status(400).send({
+                err: "wrong code",
+              });
+            }
           });
       }
-  });    
-} else {
-  res.status(400).send({
+    });
+  } else {
+    res.status(400).send({
       message: "Wrong code:(",
-  })
-}
-}
+    });
+  }
+};
 
-
-
-
-
-exports.ndaUpload = (req,res) => {
+exports.ndaUpload = (req, res) => {
   let uploadNda = fs.readFileSync(req.file.path);
   let encode_uploadNda = uploadNda.toString("base64");
   let final_uploadNda = {
     contentType: req.file.mimetype,
-    file: Buffer.from(encode_uploadNda, "base64")
+    file: Buffer.from(encode_uploadNda, "base64"),
   };
-  const {StartupName}=req.body;
+  const { StartupName } = req.body;
   const nda = new Nda({
     StartupName,
-    Nda:final_uploadNda,
+    Nda: final_uploadNda,
   });
-  nda.save((err, nda)=>{
+  nda.save((err, nda) => {
     if (err) {
       res.status(500).json({
         error: err,
@@ -130,21 +126,20 @@ exports.ndaUpload = (req,res) => {
     }
     User.findOneAndUpdate(
       { _id: req.profile._id },
-      { $push: { ndas : nda } },
+      { $push: { ndas: nda } },
       { new: true },
       (err, nda) => {
         if (err) {
           return res.status(400).json({
             error: "Unable to save hackathon",
           });
-        }
-        else{
+        } else {
           res.status(200).json(nda);
         }
       }
-    ); 
+    );
   });
-}
+};
 
 exports.getNdaById = (req, res, next, id) => {
   // console.log("in getUserById");
@@ -163,7 +158,6 @@ exports.getNda = (req, res) => {
   return res.json(req.nda);
 };
 
-
 exports.findAllNdas = (req, res) => {
   Nda.find().exec((err, nda) => {
     if (err || !nda) {
@@ -175,58 +169,52 @@ exports.findAllNdas = (req, res) => {
   });
 };
 
-exports.findAllUserNdas = (req,res) =>{
-  User.findById({_id: req.profile._id })
-      .populate("ndas")
-      .exec((err,user)=>{
-        if (err) {
-          return res.status(400).json({
-            error: err,
-          });
-        }
-        return res.status(200).json(user.ndas);
-  });
-}
-
-
-exports.verifyNda = (req,res) => {
-  Nda.findOneAndUpdate(
-    {_id : req.nda._id},
-    {VerifyByTbi : true},
-    function(err, result) {
+exports.findAllUserNdas = (req, res) => {
+  User.findById({ _id: req.profile._id })
+    .populate("ndas")
+    .exec((err, user) => {
       if (err) {
-          console.log(err);
-        } else {
-          console.log(result);
-          res.status(200).send({
-              msg:"Nda Verified",
-          })
-        }
-  }
-    )
-}
+        return res.status(400).json({
+          error: err,
+        });
+      }
+      return res.status(200).json(user.ndas);
+    });
+};
 
+exports.verifyNda = (req, res) => {
+  Nda.findOneAndUpdate(
+    { _id: req.nda._id },
+    { VerifyByTbi: true },
+    function (err, result) {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log(result);
+        res.status(200).send({
+          msg: "Nda Verified",
+        });
+      }
+    }
+  );
+};
 
-exports.isNdaVerify = (req,res,next) =>{
-  Nda.findOne( {_id:req.nda._id}, function (err,foundnda) {
-    if (foundnda.VerifyByTbi) { 
-        next();
-     } else {
-         return res.json({
-             msg: "Nda not Verified",
-             status: false,
-         });
-     }
-});
-}
-
-
+exports.isNdaVerify = (req, res, next) => {
+  Nda.findOne({ _id: req.nda._id }, function (err, foundnda) {
+    if (foundnda.VerifyByTbi) {
+      next();
+    } else {
+      return res.json({
+        msg: "Nda not Verified",
+        status: false,
+      });
+    }
+  });
+};
 
 exports.createNewStartup = (req, res) => {
-
-
- // console.log(req.profile.PhoneVerfication);
-  if(req.profile.phonestatus==="approved"){
+  // console.log(req.profile.PhoneVerfication);
+  if (req.profile.phonestatus === "approved") {
     let signedNda = fs.readFileSync(req.files.nda[0].path);
     let presentationFile = fs.readFileSync(req.files.presentation[0].path);
     let encode_signedNda = signedNda.toString("base64");
@@ -239,7 +227,21 @@ exports.createNewStartup = (req, res) => {
       contentType: req.files.presentation[0].mimetype,
       file: Buffer.from(encode_presentationFile, "base64"),
     };
-    const {StartupName, StartupDomain, StartupStage, StartupType, FounderName, FounderEmail, AadharNumber, StartupBreif, CofounderName, CofounderEmail, CofounderNumber, Link, ProjectSummary}=req.body;
+    const {
+      StartupName,
+      StartupDomain,
+      StartupStage,
+      StartupType,
+      FounderName,
+      FounderEmail,
+      AadharNumber,
+      StartupBreif,
+      CofounderName,
+      CofounderEmail,
+      CofounderNumber,
+      Link,
+      ProjectSummary,
+    } = req.body;
     const startup = new Startup({
       StartupName,
       StartupDomain,
@@ -254,40 +256,10 @@ exports.createNewStartup = (req, res) => {
       CofounderNumber,
       Link,
       ProjectSummary,
-      SignedNda:final_signedNda,
-      PresentationFile:final_presentationFile,
+      SignedNda: final_signedNda,
+      PresentationFile: final_presentationFile,
     });
-  startup.save((err, startup) => {
-    if (err) {
-      res.status(500).json({
-        error: err,
-      });
-    }
-    User.findOneAndUpdate(
-      { _id: req.profile._id },
-      { $push: { startups: startup } },
-      { new: true },
-      (err, updatedUser) => {
-        if (err) {
-          return res.status(400).json({
-            error: "Unable to save hackathon",
-          });
-        }
-        else{
-          res.status(200).json(startup);
-        }
-      }
-    ); 
-  });
-}
-else{
-  res.status(400).json({error:"You have not proper register your phone no. for Startup!!"});
-}
-};
-
-exports.internship = (req,res) => {
-  const internship = new Internship(req.body);
-    internship.save((err, Internship) => {
+    startup.save((err, startup) => {
       if (err) {
         res.status(500).json({
           error: err,
@@ -295,23 +267,50 @@ exports.internship = (req,res) => {
       }
       User.findOneAndUpdate(
         { _id: req.profile._id },
-        { $push: { internship: Internship } },
+        { $push: { startups: startup } },
         { new: true },
         (err, updatedUser) => {
           if (err) {
             return res.status(400).json({
               error: "Unable to save hackathon",
             });
+          } else {
+            res.status(200).json(startup);
           }
         }
       );
     });
-
+  } else {
+    res
+      .status(400)
+      .json({
+        error: "You have not proper register your phone no. for Startup!!",
+      });
+  }
 };
 
-
-
-
+exports.internship = (req, res) => {
+  const internship = new Internship(req.body);
+  internship.save((err, Internship) => {
+    if (err) {
+      res.status(500).json({
+        error: err,
+      });
+    }
+    User.findOneAndUpdate(
+      { _id: req.profile._id },
+      { $push: { internship: Internship } },
+      { new: true },
+      (err, updatedUser) => {
+        if (err) {
+          return res.status(400).json({
+            error: "Unable to save hackathon",
+          });
+        }
+      }
+    );
+  });
+};
 
 exports.getStartupById = (req, res) => {
   User.findById({ _id: req.profile._id })
