@@ -107,10 +107,12 @@ exports.otpverify = (req, res) => {
   }
 };
 
-exports.ndaUpload = (req, res) => {
+exports.ndaUpload = (req,res) => {
+  console.log(req.file);
   let uploadNda = fs.readFileSync(req.file.path);
   let encode_uploadNda = uploadNda.toString("base64");
   let final_uploadNda = {
+    path: req.file.path,
     contentType: req.file.mimetype,
     file: Buffer.from(encode_uploadNda, "base64"),
   };
@@ -221,10 +223,12 @@ exports.createNewStartup = (req, res) => {
     let encode_signedNda = signedNda.toString("base64");
     let encode_presentationFile = presentationFile.toString("base64");
     let final_signedNda = {
+      path: req.files.nda[0].path,
       contentType: req.files.nda[0].mimetype,
       file: Buffer.from(encode_signedNda, "base64"),
     };
     let final_presentationFile = {
+      path: req.files.nda[0].path,  
       contentType: req.files.presentation[0].mimetype,
       file: Buffer.from(encode_presentationFile, "base64"),
     };
