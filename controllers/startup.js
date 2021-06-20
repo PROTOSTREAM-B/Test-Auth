@@ -65,6 +65,7 @@ exports.otplogin = (req, res) => {
   }
 };
 
+
 exports.otpverify = (req, res) => {
 
   if (req.body.code.length === 6) {
@@ -104,6 +105,7 @@ exports.otpverify = (req, res) => {
     });
   }
 };
+
 
 exports.ndaUpload = (req,res) => {
   let uploadNda = fs.readFileSync(req.file.path);
@@ -145,6 +147,8 @@ exports.ndaUpload = (req,res) => {
   });
 };
 
+
+
 exports.getNdaById = (req, res, next, id) => {
   // console.log("in getUserById");
   Nda.findById(id).exec((err, nda) => {
@@ -157,6 +161,7 @@ exports.getNdaById = (req, res, next, id) => {
     next();
   });
 };
+
 
 exports.getNda = (req, res) => {
   return res.json(req.nda);
