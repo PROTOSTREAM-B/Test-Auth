@@ -201,7 +201,7 @@ router.post("/createstartup/:ndaId/:userId",upload.fields(
 );                                                          // 2ND TEST REMAINS WITH isNdaVerify and :ndaId
 router.post("/register/internship/:startupId/:userId",isSignedIn,isSens,createNewInternship);     //NOT TESTED
 
-router.post("/myndas/:userId",isSignedIn,isSens,findAllUserNdas);       //NOT TESTED
+router.get("/myndas/:userId",isSignedIn,findAllUserNdas);       //NOT TESTED
 
 
 //TBI ROUTES

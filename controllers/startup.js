@@ -125,10 +125,12 @@ exports.ndaUpload = (req,res) => {
         error: err,
       });
     }
+    const NDA = [];
+    NDA.push(nda);
 
     User.findOneAndUpdate(
       { _id: req.profile._id },
-      { $push: { ndas: nda } },
+      { $push: { ndas: NDA } },
       { new: true },
       (err, nda) => {
         if (err) {
@@ -172,6 +174,7 @@ exports.findAllNdas = (req, res) => {
 };
 
 exports.findAllUserNdas = (req, res) => {
+  console.log("inside findndausers");
   User.findById({ _id: req.profile._id })
     .populate("ndas")
     .exec((err, user) => {
