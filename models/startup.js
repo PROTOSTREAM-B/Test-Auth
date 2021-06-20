@@ -36,18 +36,18 @@ const startupSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    CofounderName: {
-      type: String,
-      required: true,
-    },
-    CofounderEmail: {
-      type: String,
-      required: true,
-    },
-    CofounderNumber: {
-      type: Number,
-      required: true,
-    },
+    // CofounderName: {
+    //   type: String,
+    //   required: true,
+    // },
+    // CofounderEmail: {
+    //   type: String,
+    //   required: true,
+    // },
+    // CofounderNumber: {
+    //   type: Number,
+    //   required: true,
+    // },
     Link: {
       type: String,
     },

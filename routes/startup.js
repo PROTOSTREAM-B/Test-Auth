@@ -142,19 +142,19 @@ router.post("/startup/nda/upload/:userId",upload.single('uploadnda'),isSens,isSi
 
 
 
-//REGISTER ROUTES
-// router.post("/createstartup/:ndaId/:userId",upload.single('presentation'),
-//             isSens,
-//             isNdaVerify,
-//             isSignedIn,
-//             createNewStartup,
-// );  
-router.post("/createstartup/:userId",upload.single('presentation'),
-            // isSens,
-            // isNdaVerify,
+// REGISTER ROUTES
+router.post("/createstartup/:ndaId/:userId",upload.single('presentation'),
+            isSens,
+            isNdaVerify,
             isSignedIn,
             createNewStartup,
-);                                                         // 2ND TEST REMAINS WITH isNdaVerify and :ndaId
+);  
+// router.post("/createstartup/:userId",upload.single('presentation'),
+//             // isSens,
+//             // isNdaVerify,
+//             isSignedIn,
+//             createNewStartup,
+// );                                                         // 2ND TEST REMAINS WITH isNdaVerify and :ndaId
 router.post("/register/internship/:startupId/:userId",isSignedIn,isSens,createNewInternship);     //NOT TESTED
 
 router.get("/myndas/:userId",isSignedIn,findAllUserNdas);       //NOT TESTED

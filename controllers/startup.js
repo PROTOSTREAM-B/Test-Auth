@@ -18,7 +18,6 @@ exports.readytoRegister = (req, res) => {
 };
 
 exports.isSens = (req, res, next) => {
-  //console.log(req.profile);
   if (req.profile.role === 1) {
     next();
   } else {
@@ -169,7 +168,6 @@ exports.ndaUpload = (req,res) => {
 
 
 exports.getNdaById = (req, res, next, id) => {
-  // console.log("in getUserById");
   Nda.findById(id).exec((err, nda) => {
     if (err || !nda) {
       return res.status(400).json({
@@ -242,9 +240,6 @@ exports.isNdaVerify = (req, res, next) => {
 };
 
 exports.createNewStartup = (req, res) => {
-  // console.log("inside createStartup");
-  // console.log(req.profile.PhoneVerfication);
-  // console.log(req.file.path);
   if (req.profile.phonestatus === "approved") {
     let presentationFile = fs.readFileSync(req.file.path);
     let encode_presentationFile = presentationFile.toString("base64");
@@ -290,9 +285,11 @@ exports.createNewStartup = (req, res) => {
           error: err,
         });
       }
+      startups=[]
+      startups.push(startup);
       User.findOneAndUpdate(
         { _id: req.profile._id },
-        { $push: { startups: startup } },
+        { $push: { startups: startups } },
         { new: true },
         (err, updatedUser) => {
           if (err) {
