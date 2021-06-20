@@ -6,53 +6,8 @@ const path = require("path");
 const multerStorage = multer.diskStorage({
   destination: (req, file, cb) => {
     
-      if(file.fieldname==="nda"){
-        fs.access("public", function(error) {
-          if (error) {
-            console.log("Public Directory does not exist.")
-            fs.mkdir('./public/',(err)=>{
-              if(err) {
-                return console.log(err);
-              }
-              else{
-                console.log("Public Directory created.");
-                let dir= './public';
-                fs.mkdir(dir + '/nda/', (err)=> {
-                  if (err){
-                    return console.error(err);
-                  } else{
-                    console.log("nda Directory created.");
-                    cb(null, "public/nda");
-                  }
-                });
-              }
-            });
-          } 
-          else {
-            console.log("Public Directory exists.")
-            fs.access('public/nda', function(error) {
-                  if(error) {
-                    console.log("nda Directory does not exist!!");
-                    fs.mkdir('./public/nda',(err)=>{
-                      if(err) {
-                        return console.log(err);
-                      }
-                      else{
-                        console.log("nda directory created.");
-                        cb(null, "public/nda");
-                      }
-                    });
-                  }
-                  else{
-                    console.log("nda Directory exists!!");
-                    cb(null, "public/nda");
-                  }
-              });
-          }
-        });
-        
-      }
-      else if(file.fieldname==="presentation"){
+
+      if(file.fieldname==="presentation"){
         fs.access("public", function(error) {
           if (error) {
             console.log("Public Directory does not exist!!")
@@ -182,19 +137,14 @@ router.use("/startup/createinternship/",isSens);
 router.get("/startup/:userId",isSignedIn,readytoRegister);
 router.get("/startup/register/:userId",isSignedIn,otplogin);
 router.post("/startup/verify/:userId",isSignedIn,otpverify);
-router.post("/startup/nda/upload/:userId",upload.single('uploadnda'),isSignedIn,ndaUpload);
+router.post("/startup/nda/upload/:userId",upload.single('uploadnda'),isSens,isSignedIn,ndaUpload);
 
 
 
 
 //REGISTER ROUTES
-router.post("/createstartup/:ndaId/:userId",upload.fields(
-            [{
-              name: 'nda', maxCount: 1
-            }, {
-              name: 'presentation', maxCount: 1
-            }]
-            ),isSens,
+router.post("/createstartup/:ndaId/:userId",upload.single('presentation'),
+            isSens,
             isNdaVerify,
             isSignedIn,
             createNewStartup,
