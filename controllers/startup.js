@@ -242,7 +242,9 @@ exports.isNdaVerify = (req, res, next) => {
 };
 
 exports.createNewStartup = (req, res) => {
+  // console.log("inside createStartup");
   // console.log(req.profile.PhoneVerfication);
+  // console.log(req.file.path);
   if (req.profile.phonestatus === "approved") {
     let presentationFile = fs.readFileSync(req.file.path);
     let encode_presentationFile = presentationFile.toString("base64");
@@ -294,6 +296,7 @@ exports.createNewStartup = (req, res) => {
         { new: true },
         (err, updatedUser) => {
           if (err) {
+            console.log("inside error");
             return res.status(400).json({
               error: "Unable to save hackathon",
             });
