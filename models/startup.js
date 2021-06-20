@@ -48,10 +48,6 @@ const startupSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    SignedNda: {
-      type: Object,
-      required: true,
-    },
     Link: {
       type: String,
     },

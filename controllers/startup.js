@@ -89,7 +89,15 @@ exports.otpverify = (req, res) => {
               console.log("after sending..");
               User.findOneAndUpdate(
                 { _id: req.profile._id },
-                { phonestatus: status })
+                { phonestatus: data.status,role:1 },
+                {new: true},
+                function (err, result) {
+                  if (err) {
+                    console.log(err);
+                  } else {
+                    // console.log(result);
+                  }
+                });
             } else {
               res.status(400).send({
                 err: "wrong code",
@@ -106,43 +114,54 @@ exports.otpverify = (req, res) => {
 };
 
 exports.ndaUpload = (req,res) => {
-  let uploadNda = fs.readFileSync(req.file.path);
-  let encode_uploadNda = uploadNda.toString("base64");
-  let final_uploadNda = {
-    path: req.file.path,
-    contentType: req.file.mimetype,
-    file: Buffer.from(encode_uploadNda, "base64"),
-  };
-  const { StartupName } = req.body;
-
-  const nda = new Nda({
-    StartupName,
-    Nda: final_uploadNda,
-  });
-  nda.save((err, nda) => {
-    if (err) {
-      res.status(500).json({
-        error: err,
-      });
-    }
-    const NDA = [];
-    NDA.push(nda);
-
-    User.findOneAndUpdate(
-      { _id: req.profile._id },
-      { $push: { ndas: NDA } },
-      { new: true },
-      (err, nda) => {
-        if (err) {
-          return res.status(400).json({
-            error: "Unable to save hackathon",
-          });
-        } else {
-          return res.status(200).json(nda);
-        }
+  console.log(req.profile.phonestatus);
+  if(req.profile.phonestatus==="approved"){
+    let uploadNda = fs.readFileSync(req.file.path);
+    let encode_uploadNda = uploadNda.toString("base64");
+    let final_uploadNda = {
+      path: req.file.path,
+      contentType: req.file.mimetype,
+      file: Buffer.from(encode_uploadNda, "base64"),
+    };
+    const { StartupName } = req.body;
+  
+    const nda = new Nda({
+      StartupName,
+      Nda: final_uploadNda,
+    });
+    nda.save((err, nda) => {
+      if (err) {
+        res.status(500).json({
+          error: err,
+        });
       }
-    );
-  });
+      const NDA = [];
+      NDA.push(nda);
+  
+      User.findOneAndUpdate(
+        { _id: req.profile._id },
+        { $push: { ndas: NDA } },
+        { new: true },
+        (err, nda) => {
+          if (err) {
+            return res.status(400).json({
+              error: "Unable to save hackathon",
+            });
+          } else {
+            return res.status(200).json(nda);
+          }
+        }
+      );
+    });
+  }
+  else{
+    res
+      .status(400)
+      .json({
+        error: "You have not proper register your phone no. for Startup!!",
+      });
+  }
+  
 };
 
 exports.getNdaById = (req, res, next, id) => {
@@ -206,7 +225,7 @@ exports.verifyNda = (req, res) => {
 
 exports.isNdaVerify = (req, res, next) => {
   Nda.findOne({ _id: req.nda._id }, function (err, foundnda) {
-    if (foundnda.VerifyByTbi) {
+    if (true) {
       next();
     } else {
       return res.json({
@@ -220,18 +239,11 @@ exports.isNdaVerify = (req, res, next) => {
 exports.createNewStartup = (req, res) => {
   // console.log(req.profile.PhoneVerfication);
   if (req.profile.phonestatus === "approved") {
-    let signedNda = fs.readFileSync(req.files.nda[0].path);
-    let presentationFile = fs.readFileSync(req.files.presentation[0].path);
-    let encode_signedNda = signedNda.toString("base64");
+    let presentationFile = fs.readFileSync(req.file.path);
     let encode_presentationFile = presentationFile.toString("base64");
-    let final_signedNda = {
-      path: req.files.nda[0].path,
-      contentType: req.files.nda[0].mimetype,
-      file: Buffer.from(encode_signedNda, "base64"),
-    };
     let final_presentationFile = {
-      path: req.files.nda[0].path,  
-      contentType: req.files.presentation[0].mimetype,
+      path: req.file.path,  
+      contentType: req.file.mimetype,
       file: Buffer.from(encode_presentationFile, "base64"),
     };
     const {
@@ -263,7 +275,6 @@ exports.createNewStartup = (req, res) => {
       CofounderNumber,
       Link,
       ProjectSummary,
-      SignedNda: final_signedNda,
       PresentationFile: final_presentationFile,
     });
     startup.save((err, startup) => {
