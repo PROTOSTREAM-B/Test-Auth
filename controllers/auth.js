@@ -11,99 +11,22 @@ var _ = require("lodash");
 const { VideoGrant } = require("twilio/lib/jwt/AccessToken");
 
 exports.register = (req, res) => {
-  console.log("inside register");
-  console.log(req.body);
-  emails=[
-    "vineet.sharma@kiet.edu","hod.verma@kiet.edu"
-  ]
-
   let regx = /^([a-z]+)(\.)([0-9]{4})([a-z]{2})([0-9]{4})(@)(kiet)(\.)(edu)$/;
-  let tbiregx = /^([a-z]+)(\.)([a-z]+)(@)(kiet)(\.)(edu)$/;
+  if (regx.test(req.body.email)) {
+    let testemail = req.body.email;
+    let data = _.capitalize(testemail).split(".");
+    let proname = data[0];
+    let proid = data[1].split("@")[0];
+    let probranch = proid.slice(4, 6);
+    let proyear = "20" + proid.slice(0, 2) + "-" + proid.slice(2, 4);
+    let profiledata = {
+      Profilename: proname,
+      ProfileID: proid,
+      ProfileBranch: probranch,
+      ProfileYear: proyear,
+    };
 
-  
-  if (regx.test(req.body.email) || tbiregx.test(req.body.email)) {
-    if(regx.test(req.body.email)){
-        let testemail = req.body.email;
-        let data = _.capitalize(testemail).split(".");
-        let proname = data[0];
-        let proid = data[1].split("@")[0];
-        let probranch = proid.slice(4, 6);
-        let proyear = "20" + proid.slice(0, 2) + "-" + proid.slice(2, 4);
-        let profiledata = {
-        Profilename: proname,
-        ProfileID: proid,
-        ProfileBranch: probranch,
-        ProfileYear: proyear,
-      };
-      User.findOne({ email: req.body.email }, function (err, foundUser) {
-        // console.log("[Found User]",foundUser);
-        if (foundUser) {
-          return res.json({ error: "Email already registered" });
-        } else {
-          bcrypt.hash(req.body.password, saltRounds, function (err, hash) {
-            const newUser = new User({
-              email: req.body.email,
-              password: hash,
-              profiledata: profiledata,
-              role: 0,
-              number: req.body.number,
-            });
-  
-            newUser.save(function (err, savedUser) {
-              // console.log("[SavedUser]",savedUser);
-              if (!err) {
-                const token = jwt.sign(
-                  { _id: newUser._id },
-                  process.env.SECRET_KEY
-                );
-                res.cookie("token", token, { expire: new Date() + 7 });
-                const {
-                  _id,
-                  projects,
-                  hackathons,
-                  schemes,
-                  email,
-                  profiledata,
-                  role,
-                  phonestatus,
-                  number,
-                } = savedUser;
-  
-                return res.send({
-                  token,
-                  cookies: res.cookies,
-                  user: {
-                    _id,
-                    projects,
-                    hackathons,
-                    email,
-                    schemes,
-                    profiledata,
-                    role,
-                    phonestatus,
-                    number,
-                  },
-                });
-              } else {
-                return res.status(400).json({
-                  error: err,
-                });
-              }
-            });
-          });
-        }
-      });
-    }
-    else if(tbiregx.test(req.body.email) && emails.includes(req.body.email)){
-        let testemail = req.body.email;
-        let data = _.capitalize(testemail).split(".");
-        let proname = data[0];
-        let prosurname = data[1].split("@")[0];
-        let profiledata = {
-          Profilename: proname+" "+prosurname,
-        };
-        User.findOne({ email: req.body.email }, function (err, foundUser) {
-      // console.log("[Found User]",foundUser);
+    User.findOne({ email: req.body.email }, function (err, foundUser) {
       if (foundUser) {
         return res.json({ error: "Email already registered" });
       } else {
@@ -111,16 +34,16 @@ exports.register = (req, res) => {
           const newUser = new User({
             email: req.body.email,
             password: hash,
+            number: req.body.number,
             profiledata: profiledata,
             role: 2,
             number: req.body.number,
           });
 
           newUser.save(function (err, savedUser) {
-            // console.log("[SavedUser]",savedUser);
             if (!err) {
               const token = jwt.sign(
-                { _id: newUser._id},
+                { _id: newUser._id },
                 process.env.SECRET_KEY
               );
               res.cookie("token", token, { expire: new Date() + 7 });
@@ -159,12 +82,7 @@ exports.register = (req, res) => {
           });
         });
       }
-    }); 
-    }
-    
-    
-
-    
+    });
   } else {
     return res.status(400).json("Invalid Email id");
   }
@@ -187,10 +105,9 @@ exports.login = (req, res) => {
               { _id: foundUser._id },
               process.env.SECRET_KEY
             );
-            // console.log(typeof token);
-            res.cookie("hii", "hiiia");
-            console.log(req.cookies);
-            // res.cookie("token", token);
+
+            res.cookie("token", token);
+            console.log(res.headers);
 
             const {
               _id,
@@ -203,8 +120,6 @@ exports.login = (req, res) => {
               number,
               phonestatus,
             } = foundUser;
-            // console.log(res.headers);
-            // return res.send("sending response");
 
             // req.profile = foundUser;
 
@@ -223,7 +138,6 @@ exports.login = (req, res) => {
                 phonestatus,
               },
             });
-           
           } else {
             return res.status(401).json({
               error: "Email or password do not match",
@@ -244,15 +158,13 @@ exports.logout = (req, res) => {
 
 // protected Routes..
 
-exports.isSignedIn = (req, res, next) => {
-  // console.log(req.headers);
-  // console.log(req.cookies);
-  // console.log(req.session);
-  next();
-};
-
+exports.isSignedIn = expressJwt({
+  secret: process.env.SECRET_KEY,
+  userProperty: "auth",
+});
 
 exports.isAuthenticated = (req, res, next) => {
+  console.log(req.headers);
   console.log(req.profile);
   console.log(req.auth);
   let checker = req.profile && req.auth && req.profile._id == req.auth._id;
@@ -284,5 +196,3 @@ exports.isTBI = (req, res, next) => {
     });
   }
 };
-
-

@@ -2,7 +2,10 @@ const User = require("../models/user");
 
 exports.getUserById = (req, res, next, id) => {
   // console.log("in getUserById");
+<<<<<<< HEAD
   // console.log(id);
+=======
+>>>>>>> akhil
   User.findById(id).exec((err, user) => {
     if (err || !user) {
       return res.status(400).json({

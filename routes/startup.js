@@ -130,41 +130,32 @@ router.param("userId", getUserById);
 router.param("startupId", getStartupById);
 router.param("ndaId", getNdaById);
 
-router.use("/startup/createinternship/",isSens);
+router.post(
+  "/startup/PhoneLogin/:userId",
+  // isSignedIn,
+  isSens,
+  PhoneLogin
+);
+
+router.post(
+  "/startup/:PhoneLoginNumber/PhoneVerify/:userId",
+  // isSignedIn,
+  isSens,
+  PhoneVerify
+);
 
 
-// SENS ROUTES
-router.get("/startup/:userId",isSignedIn,readytoRegister);
-router.get("/startup/register/:userId",isSignedIn,otplogin);
-router.post("/startup/verify/:userId",isSignedIn,otpverify);
-router.post("/startup/nda/upload/:userId",upload.single('uploadnda'),isSens,isSignedIn,ndaUpload);
-
-
-
-
-// REGISTER ROUTES
-router.post("/createstartup/:ndaId/:userId",upload.single('presentation'),
-            isSens,
-            isNdaVerify,
-            isSignedIn,
-            createNewStartup,
-);  
-// router.post("/createstartup/:userId",upload.single('presentation'),
-//             // isSens,
-//             // isNdaVerify,
-//             isSignedIn,
-//             createNewStartup,
-// );                                                         // 2ND TEST REMAINS WITH isNdaVerify and :ndaId
-router.post("/register/internship/:startupId/:userId",isSignedIn,isSens,createNewInternship);     //NOT TESTED
-
-router.get("/myndas/:userId",isSignedIn,findAllUserNdas);       //NOT TESTED
-router.get("/allstartups",findAllStartups);
-
-//TBI ROUTES
-router.post("/ndalist/:userId",isSignedIn,isTBI,findAllNdas);         //NOT TESTED
-router.post("/nda/:ndaId/:userId",isSignedIn,isTBI,getNda);   //NOT TESTED
-router.patch("/verifynda/:ndaId/:userId",isSignedIn,isTBI,verifyNda);   //NOT TESTED
-
-
+router.post(
+  "/startup/createStartup/:userId",
+  // isSignedIn,
+  isSens,
+  createNewStartup
+);
+router.get(
+  "/startup/allStartups",
+  // isSignedIn,
+  // isAuthenticated,
+  findAllStartups
+);
 
 module.exports = router;

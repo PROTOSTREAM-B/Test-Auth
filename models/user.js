@@ -4,21 +4,21 @@ const { ObjectId } = mongoose.Schema;
 
 const userSchema = new mongoose.Schema(
   {
-    phonestatus:{
+    phonestatus: {
       type: String,
       required: false,
       default: "Not-verify",
     },
-    sid:{
+    sid: {
       type: String,
       required: false,
       default: null,
     },
-    // verification:{
-    //   type: Boolean,
-    //   default: false,
-    //   required: false,
-    // },
+    verification: {
+      type: Boolean,
+      default: false,
+      required: false,
+    },
     email: {
       type: String,
       required: true,
@@ -78,12 +78,6 @@ const userSchema = new mongoose.Schema(
       {
         type: ObjectId,
         ref: "Internship",
-      },
-    ],
-    ndas: [
-      {
-        type: ObjectId,
-        ref: "Nda",
       },
     ],
     number: {
