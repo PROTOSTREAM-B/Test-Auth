@@ -350,6 +350,7 @@ exports.getStartupById = (req, res) => {
 };
 
 exports.findAllStartups = (req, res) => {
+  console.log("inside allStartups")
   Startup.find().exec((err, startup) => {
     if (err || !startup) {
       res.status(500).json({

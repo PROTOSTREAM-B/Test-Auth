@@ -120,7 +120,7 @@ const {
   isAuthenticated,
   isTBI,
 } = require("../controllers/auth");
-const { createNewStartup, readytoRegister, getStartupById, otplogin, otpverify, isSens, ndaUpload, findAllUserNdas, findAllNdas, getNda, getNdaById, verifyNda, isNdaVerify, internship } = require("../controllers/startup");
+const { createNewStartup, readytoRegister, getStartupById, otplogin, otpverify, isSens, ndaUpload, findAllUserNdas, findAllNdas, getNda, getNdaById, verifyNda, isNdaVerify, internship, findAllStartups } = require("../controllers/startup");
 
 const {createNewInternship} = require("../controllers/internship");
 
@@ -158,7 +158,7 @@ router.post("/createstartup/:ndaId/:userId",upload.single('presentation'),
 router.post("/register/internship/:startupId/:userId",isSignedIn,isSens,createNewInternship);     //NOT TESTED
 
 router.get("/myndas/:userId",isSignedIn,findAllUserNdas);       //NOT TESTED
-
+router.get("/allstartups",findAllStartups);
 
 //TBI ROUTES
 router.post("/ndalist/:userId",isSignedIn,isTBI,findAllNdas);         //NOT TESTED
